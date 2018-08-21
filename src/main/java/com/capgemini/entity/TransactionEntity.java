@@ -2,8 +2,9 @@ package com.capgemini.entity;
 
 
 import com.capgemini.Status;
-import com.sun.istack.internal.NotNull;
 import lombok.Data;
+import org.springframework.data.annotation.Version;
+
 
 import javax.persistence.*;
 import java.util.Date;
@@ -19,14 +20,14 @@ public class TransactionEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotNull
+    @Column(nullable = false)
     private Date date;
 
-    @NotNull
+    @Column(nullable = false)
     @Enumerated
     private Status status;
 
-    @NotNull
+    @Column(nullable = false)
     private Integer quantity;
 
     @ManyToOne
@@ -35,4 +36,11 @@ public class TransactionEntity {
 
     @ManyToMany
     private List<ProductEntity> products;
+
+    @Version
+    private int version;
+
+    private Date dateOfCreation;
+
+    private Date dateOfUpdate;
 }

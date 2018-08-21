@@ -1,9 +1,9 @@
 package com.capgemini.service;
 
-import com.capgemini.entity.ClientEntity;
+import com.capgemini.type.ClientTO;
 
 public interface ClientService {
-    ClientEntity findClientById(Long id);
+    ClientTO findClientById(Long id);
 
-    ClientEntity addClient(ClientEntity clientEntity);
+    ClientTO addClient(ClientTO client);
 }

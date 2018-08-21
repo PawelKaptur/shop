@@ -1,10 +1,11 @@
 package com.capgemini.entity;
 
-
-import com.sun.istack.internal.NotNull;
 import lombok.Data;
+import org.springframework.data.annotation.Version;
+
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -16,15 +17,22 @@ public class ProductEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotNull
+    @Column(nullable = false)
     private Double cost;
 
-    @NotNull
+    @Column(nullable = false)
     private Double margin;
 
-    @NotNull
+    @Column(nullable = false)
     private Double weight;
 
     @ManyToMany
     private List<TransactionEntity> transactions;
+
+    @Version
+    private int version;
+
+    private Date dateOfCreation;
+
+    private Date dateOfUpdate;
 }
