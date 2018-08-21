@@ -1,4 +1,4 @@
-package com.capgemini.entity;
+package com.capgemini;
 
 public enum Status {
     REALIZED,

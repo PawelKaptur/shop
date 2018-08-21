@@ -1,5 +1,6 @@
 package com.capgemini.entity;
 
+
 import com.sun.istack.internal.NotNull;
 import lombok.Data;
 
@@ -9,28 +10,29 @@ import java.util.List;
 
 @Entity
 @Data
+@Table(name = "client")
 public class ClientEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long Id;
+    private Long id;
 
-    @NotNull
+    @Column(nullable = false)
     private String firstName;
 
-    @NotNull
+    @Column(nullable = false)
     private String lastName;
 
-    @NotNull
+    @Column(nullable = false)
     private String email;
 
-    @NotNull
+    @Column(nullable = false)
     private Long telephone;
 
-    @NotNull
+    @Column(nullable = false)
     private String address;
 
-    @NotNull
+    @Column(nullable = false)
     private Date dateOfBirth;
 
     @OneToMany

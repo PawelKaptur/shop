@@ -1,6 +1,7 @@
 package com.capgemini.entity;
 
 
+import com.capgemini.Status;
 import com.sun.istack.internal.NotNull;
 import lombok.Data;
 
@@ -10,6 +11,7 @@ import java.util.List;
 
 @Entity
 @Data
+@Table(name = "transaction")
 public class TransactionEntity {
 
 
@@ -28,6 +30,7 @@ public class TransactionEntity {
     private Integer quantity;
 
     @ManyToOne
+    @JoinColumn(name = "client_id", referencedColumnName = "id")
     private ClientEntity client;
 
     @ManyToMany
