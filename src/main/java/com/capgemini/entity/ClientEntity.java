@@ -36,7 +36,7 @@ public class ClientEntity extends AbstractEntity {
     @Column(nullable = false)
     private Date dateOfBirth;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.REMOVE)
     private List<TransactionEntity> transactions;
 
     @Version
