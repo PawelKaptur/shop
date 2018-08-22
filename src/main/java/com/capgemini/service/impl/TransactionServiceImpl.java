@@ -98,11 +98,17 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public List<TransactionTO> findAllTransactions() {
-        return null;
+        return TransactionMapper.toTransactionTOList(transactionRepository.findAll());
     }
 
     @Override
     public TransactionTO updateTransaction(TransactionTO transaction) {
-        return null;
+        TransactionEntity transactionEntity = transactionRepository.findTransactionEntityById(transaction.getId());
+        transactionEntity.setStatus(transaction.getStatus());
+        transactionEntity.setQuantity(transaction.getQuantity());
+        transactionEntity.setDate(transaction.getDate());
+
+        transactionRepository.save(transactionEntity);
+        return TransactionMapper.toTransactionTO(transactionEntity);
     }
 }
