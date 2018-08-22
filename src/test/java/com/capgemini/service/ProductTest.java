@@ -22,7 +22,7 @@ public class ProductTest {
 
     @Test
     @Transactional
-    public void shouldAddProduct(){
+    public void shouldAddProduct() {
         //given
         ProductTO product = new ProductTO();
         product.setWeight(2D);
@@ -40,7 +40,7 @@ public class ProductTest {
 
     @Test
     @Transactional
-    public void shouldRemoveProduct(){
+    public void shouldRemoveProduct() {
         //given
         ProductTO product = new ProductTO();
         product.setWeight(2D);
@@ -58,7 +58,7 @@ public class ProductTest {
 
     @Test
     @Transactional
-    public void shouldFindThreeProducts(){
+    public void shouldFindThreeProducts() {
         //given
         ProductTO product = new ProductTO();
         product.setWeight(2D);
@@ -74,5 +74,28 @@ public class ProductTest {
 
         //then
         assertThat(products.size()).isEqualTo(3);
+    }
+
+    @Test
+    @Transactional
+    public void shouldUpdateWeight() {
+        //given
+        ProductTO product = new ProductTO();
+        product.setWeight(2D);
+        product.setMargin(0.2);
+        product.setCost(1000D);
+
+        ProductTO addedProduct = productService.addProduct(product);
+
+        Double weight = 100D;
+
+        //when
+        addedProduct.setWeight(weight);
+        ProductTO updatedProduct = productService.updateProduct(addedProduct);
+
+        //then
+        assertThat(updatedProduct.getWeight().equals(weight));
+        assertThat(updatedProduct.getId()).isEqualTo(addedProduct.getId());
+        assertThat(productService.findProductById(updatedProduct.getId()).getWeight()).isEqualTo(weight);
     }
 }

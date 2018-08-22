@@ -46,7 +46,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductTO updateProduct(ProductTO client) {
-        return null;
+    public ProductTO updateProduct(ProductTO product) {
+        ProductEntity productEntity = productRepository.findProductEntityById(product.getId());
+        productEntity.setWeight(product.getWeight());
+        productEntity.setMargin(product.getMargin());
+        productEntity.setCost(product.getCost());
+
+        productRepository.save(productEntity);
+
+        return ProductMapper.toProductTO(productEntity);
     }
 }

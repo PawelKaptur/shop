@@ -37,13 +37,13 @@ public class ClientTest {
         client.setDateOfBirth(new Date());
         client.setEmail("adam.malysz@gmail.com");
         client.setTelephone(2312312321L);
-        ClientTO savedClient = clientService.addClient(client);
+        ClientTO addedClient = clientService.addClient(client);
 
         //when
-        ClientTO selectedClient = clientService.findClientById(savedClient.getId());
+        ClientTO selectedClient = clientService.findClientById(addedClient.getId());
 
         //then
-        assertThat(selectedClient.getId()).isEqualTo(savedClient.getId());
+        assertThat(selectedClient.getId()).isEqualTo(addedClient.getId());
     }
 
     @Test
@@ -57,13 +57,13 @@ public class ClientTest {
         client.setDateOfBirth(new Date());
         client.setEmail("adam.malysz@gmail.com");
         client.setTelephone(2312312321L);
-        ClientTO savedClient = clientService.addClient(client);
+        ClientTO addedClient = clientService.addClient(client);
 
         //when
-        clientService.removeClient(savedClient.getId());
+        clientService.removeClient(addedClient.getId());
 
         //then
-        assertThat(clientService.findClientById(savedClient.getId())).isNull();
+        assertThat(clientService.findClientById(addedClient.getId())).isNull();
     }
 
     @Test
@@ -99,10 +99,10 @@ public class ClientTest {
         client.setDateOfBirth(new Date());
         client.setEmail("adam.malysz@gmail.com");
         client.setTelephone(2312312321L);
-        ClientTO savedClient = clientService.addClient(client);
+        ClientTO addedClient = clientService.addClient(client);
 
         //when
-        ClientEntity selectedClient = clientRepository.findClientEntityById(savedClient.getId());
+        ClientEntity selectedClient = clientRepository.findClientEntityById(addedClient.getId());
 
         //then
         assertThat(selectedClient.getDateOfCreation()).isNotNull();
@@ -120,18 +120,18 @@ public class ClientTest {
         client.setDateOfBirth(new Date());
         client.setEmail("adam.malysz@gmail.com");
         client.setTelephone(2312312321L);
-        ClientTO savedClient = clientService.addClient(client);
+        ClientTO addedClient = clientService.addClient(client);
 
         String lastName = "Dluzysz";
 
         //when
-        savedClient.setLastName(lastName);
-        ClientTO updatedClient = clientService.updateClient(savedClient);
+        addedClient.setLastName(lastName);
+        ClientTO updatedClient = clientService.updateClient(addedClient);
         List<ClientTO> clients = clientService.findAllClients();
 
         //then
         assertThat(updatedClient.getLastName().equals(lastName));
-        assertThat(updatedClient.getId()).isEqualTo(savedClient.getId());
+        assertThat(updatedClient.getId()).isEqualTo(addedClient.getId());
         assertThat(clientService.findClientById(updatedClient.getId()).getLastName()).isEqualTo(lastName);
         assertThat(clients.size()).isEqualTo(1);
     }
@@ -147,15 +147,15 @@ public class ClientTest {
         client.setDateOfBirth(new Date());
         client.setEmail("adam.malysz@gmail.com");
         client.setTelephone(2312312321L);
-        ClientTO savedClient = clientService.addClient(client);
+        ClientTO addedClient = clientService.addClient(client);
 
         String lastName = "Duzysz";
         //when
-        savedClient.setLastName(lastName);
-        Date createDate1 = clientRepository.findClientEntityById(savedClient.getId()).getDateOfCreation();
+        addedClient.setLastName(lastName);
+        Date createDate1 = clientRepository.findClientEntityById(addedClient.getId()).getDateOfCreation();
         TimeUnit.SECONDS.sleep(1);
-        clientService.updateClient(savedClient);
-        ClientEntity selectedClient = clientRepository.findClientEntityById(savedClient.getId());
+        clientService.updateClient(addedClient);
+        ClientEntity selectedClient = clientRepository.findClientEntityById(addedClient.getId());
         Date createDate2 = clientRepository.findClientEntityById(selectedClient.getId()).getDateOfCreation();
 
         //then
@@ -175,15 +175,15 @@ public class ClientTest {
         client.setDateOfBirth(new Date());
         client.setEmail("adam.malysz@gmail.com");
         client.setTelephone(2312312321L);
-        ClientTO savedClient = clientService.addClient(client);
+        ClientTO addedClient = clientService.addClient(client);
 
         String lastName = "Duzysz";
 
         //when
-        savedClient.setLastName(lastName);
-        Integer version1 = clientRepository.findClientEntityById(savedClient.getId()).getVersion();
-        clientService.updateClient(savedClient);
-        Integer version2 = clientRepository.findClientEntityById(savedClient.getId()).getVersion();
+        addedClient.setLastName(lastName);
+        Integer version1 = clientRepository.findClientEntityById(addedClient.getId()).getVersion();
+        clientService.updateClient(addedClient);
+        Integer version2 = clientRepository.findClientEntityById(addedClient.getId()).getVersion();
 
         //then
         assertThat(version1).isNotEqualTo(version2);
