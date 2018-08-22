@@ -50,8 +50,12 @@ public class TransactionTest {
         product.setCost(1000D);
 
         ProductTO addedProduct = productService.addProduct(product);
+        ProductTO addedProduct2 = productService.addProduct(product);
+
         List<Long> products = new LinkedList<>();
         products.add(addedProduct.getId());
+        products.add(addedProduct2.getId());
+
 
         TransactionTO transaction = new TransactionTO();
         transaction.setDate(new Date());
@@ -67,7 +71,12 @@ public class TransactionTest {
 
         //then
         assertThat(selectedTransaction.getId()).isEqualTo(selectedTransaction.getId());
+        assertThat(selectedTransaction.getProducts().size()).isEqualTo(2);
         assertThat(clientService.findClientById(addedClient.getId()).getTransactions().size()).isEqualTo(1);
         assertThat(clientService.findClientById(addedClient.getId()).getTransactions().get(0)).isEqualTo(addedTransaction.getId());
+        assertThat(productService.findProductById(addedProduct.getId()).getTransactions().size()).isEqualTo(1);
+        assertThat(productService.findProductById(addedProduct.getId()).getTransactions().get(0)).isEqualTo(addedTransaction.getId());
+        assertThat(productService.findProductById(addedProduct2.getId()).getTransactions().size()).isEqualTo(1);
+        assertThat(productService.findProductById(addedProduct2.getId()).getTransactions().get(0)).isEqualTo(addedTransaction.getId());
     }
 }

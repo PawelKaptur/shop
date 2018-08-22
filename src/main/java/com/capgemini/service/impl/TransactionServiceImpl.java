@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -54,7 +55,6 @@ public class TransactionServiceImpl implements TransactionService {
         transactionEntity.setProducts(products);
         transactionRepository.save(transactionEntity);
 
-
         List<TransactionEntity> transactions;
 
         if(clientEntity.getTransactions() != null) {
@@ -68,7 +68,22 @@ public class TransactionServiceImpl implements TransactionService {
         clientEntity.setTransactions(transactions);
         clientRepository.save(clientEntity);
 
-        //jeszcze bedzie trzeba uaktualnic w produkcie i kliencie, i jeszcze validator
+        List<TransactionEntity> productTransactions;
+
+        for(ProductEntity product: products){
+            if(product.getTransactions() != null){
+                productTransactions = product.getTransactions();
+            }
+            else{
+                productTransactions = new LinkedList<>();
+            }
+
+            productTransactions.add(transactionEntity);
+            product.setTransactions(productTransactions);
+        }
+
+        productRepository.saveAll(products);
+        //jeszcze validator
         return TransactionMapper.toTransactionTO(transactionEntity);
     }
 
