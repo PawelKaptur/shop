@@ -3,7 +3,6 @@ package com.capgemini.mapper;
 import com.capgemini.entity.ClientEntity;
 import com.capgemini.type.ClientTO;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;

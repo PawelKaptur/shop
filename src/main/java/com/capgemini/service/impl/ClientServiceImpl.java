@@ -58,7 +58,6 @@ public class ClientServiceImpl implements ClientService {
         clientEntity.setTelephone(clientTO.getTelephone());
         clientEntity.setFirstName(clientTO.getFirstName());
         clientRepository.save(clientEntity);
-        //ClientEntity clientEntity = clientRepository.save(ClientMapper.toClientEntity(client));
         return ClientMapper.toClientTO(clientEntity);
     }
 }
