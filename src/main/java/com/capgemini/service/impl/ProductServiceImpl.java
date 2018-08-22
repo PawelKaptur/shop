@@ -35,13 +35,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional(readOnly = false)
     public void removeProduct(Long id) {
-
+        productRepository.deleteById(id);
     }
 
     @Override
     public List<ProductTO> findAllProducts() {
-        return null;
+        return ProductMapper.toProductTOList(productRepository.findAll());
     }
 
     @Override

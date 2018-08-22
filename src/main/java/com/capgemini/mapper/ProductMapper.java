@@ -3,6 +3,9 @@ package com.capgemini.mapper;
 import com.capgemini.entity.ProductEntity;
 import com.capgemini.type.ProductTO;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class ProductMapper {
@@ -34,5 +37,15 @@ public class ProductMapper {
         productEntity.setWeight(productTO.getWeight());
 
         return productEntity;
+    }
+
+    public static List<ProductTO> toProductTOList(Iterable<ProductEntity> products) {
+        Iterator<ProductEntity> it = products.iterator();
+        List<ProductTO> productsTO = new LinkedList<>();
+        while(it.hasNext()){
+            productsTO.add(toProductTO(it.next()));
+        }
+
+        return productsTO;
     }
 }
