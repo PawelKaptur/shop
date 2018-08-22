@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -38,6 +37,7 @@ public class TransactionServiceImpl implements TransactionService {
         return TransactionMapper.toTransactionTO(transactionRepository.findTransactionEntityById(id));
     }
 
+    //jeszcze validator
     @Override
     @Transactional(readOnly = false)
     public TransactionTO addTransaction(TransactionTO transaction) {
@@ -48,43 +48,47 @@ public class TransactionServiceImpl implements TransactionService {
         List<Long> productsId = transaction.getProducts();
         List<ProductEntity> products = new LinkedList<>();
 
-        for(Long id: productsId){
+        for (Long id : productsId) {
             products.add(productRepository.findProductEntityById(id));
         }
 
         transactionEntity.setProducts(products);
         transactionRepository.save(transactionEntity);
 
+        addTransactionToClient(clientEntity, transactionEntity);
+        addTransactionToProducts(products, transactionEntity);
+        return TransactionMapper.toTransactionTO(transactionEntity);
+    }
+
+    private void addTransactionToClient(ClientEntity clientEntity, TransactionEntity transactionEntity) {
         List<TransactionEntity> transactions;
 
-        if(clientEntity.getTransactions() != null) {
+        if (clientEntity.getTransactions() != null) {
             transactions = clientEntity.getTransactions();
-        }
-        else{
+        } else {
             transactions = new LinkedList<>();
         }
 
         transactions.add(transactionEntity);
         clientEntity.setTransactions(transactions);
         clientRepository.save(clientEntity);
+    }
 
-        List<TransactionEntity> productTransactions;
+    private void addTransactionToProducts(List<ProductEntity> products, TransactionEntity transactionEntity) {
+        List<TransactionEntity> productsTransactions;
 
-        for(ProductEntity product: products){
-            if(product.getTransactions() != null){
-                productTransactions = product.getTransactions();
+        for (ProductEntity product : products) {
+            if (product.getTransactions() != null) {
+                productsTransactions = product.getTransactions();
+            } else {
+                productsTransactions = new LinkedList<>();
             }
-            else{
-                productTransactions = new LinkedList<>();
-            }
 
-            productTransactions.add(transactionEntity);
-            product.setTransactions(productTransactions);
+            productsTransactions.add(transactionEntity);
+            product.setTransactions(productsTransactions);
         }
 
         productRepository.saveAll(products);
-        //jeszcze validator
-        return TransactionMapper.toTransactionTO(transactionEntity);
     }
 
     @Override
