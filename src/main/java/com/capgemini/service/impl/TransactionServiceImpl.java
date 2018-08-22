@@ -1,6 +1,7 @@
 package com.capgemini.service.impl;
 
 
+import com.capgemini.entity.ClientEntity;
 import com.capgemini.entity.ProductEntity;
 import com.capgemini.entity.TransactionEntity;
 import com.capgemini.mapper.TransactionMapper;
@@ -40,7 +41,9 @@ public class TransactionServiceImpl implements TransactionService {
     @Transactional(readOnly = false)
     public TransactionTO addTransaction(TransactionTO transaction) {
         TransactionEntity transactionEntity = TransactionMapper.toTransactionEntity(transaction);
-        transactionEntity.setClient(clientRepository.findClientEntityById(transaction.getClient()));
+        ClientEntity clientEntity = clientRepository.findClientEntityById(transaction.getClient());
+        transactionEntity.setClient(clientEntity);
+
         List<Long> productsId = transaction.getProducts();
         List<ProductEntity> products = new LinkedList<>();
 
@@ -49,8 +52,22 @@ public class TransactionServiceImpl implements TransactionService {
         }
 
         transactionEntity.setProducts(products);
-
         transactionRepository.save(transactionEntity);
+
+
+        List<TransactionEntity> transactions;
+
+        if(clientEntity.getTransactions() != null) {
+            transactions = clientEntity.getTransactions();
+        }
+        else{
+            transactions = new LinkedList<>();
+        }
+
+        transactions.add(transactionEntity);
+        clientEntity.setTransactions(transactions);
+        clientRepository.save(clientEntity);
+
         //jeszcze bedzie trzeba uaktualnic w produkcie i kliencie, i jeszcze validator
         return TransactionMapper.toTransactionTO(transactionEntity);
     }

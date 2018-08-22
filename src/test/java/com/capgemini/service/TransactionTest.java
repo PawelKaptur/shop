@@ -67,5 +67,7 @@ public class TransactionTest {
 
         //then
         assertThat(selectedTransaction.getId()).isEqualTo(selectedTransaction.getId());
+        assertThat(clientService.findClientById(addedClient.getId()).getTransactions().size()).isEqualTo(1);
+        assertThat(clientService.findClientById(addedClient.getId()).getTransactions().get(0)).isEqualTo(addedTransaction.getId());
     }
 }
