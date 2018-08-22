@@ -2,6 +2,7 @@ package com.capgemini.entity;
 
 
 import com.capgemini.Status;
+import com.capgemini.listener.Listener;
 import lombok.Data;
 import org.springframework.data.annotation.Version;
 
@@ -13,8 +14,9 @@ import java.util.List;
 @Entity
 @Data
 @Table(name = "transaction")
-public class TransactionEntity {
-
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@EntityListeners(Listener.class)
+public class TransactionEntity extends AbstractEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -39,8 +41,4 @@ public class TransactionEntity {
 
     @Version
     private int version;
-
-    private Date dateOfCreation;
-
-    private Date dateOfUpdate;
 }
