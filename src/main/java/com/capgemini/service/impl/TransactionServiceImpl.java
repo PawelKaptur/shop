@@ -1,6 +1,7 @@
 package com.capgemini.service.impl;
 
 
+import com.capgemini.exception.TransactionDeniedException;
 import com.capgemini.entity.ClientEntity;
 import com.capgemini.entity.ProductEntity;
 import com.capgemini.entity.TransactionEntity;
@@ -40,7 +41,7 @@ public class TransactionServiceImpl implements TransactionService {
     //jeszcze validator
     @Override
     @Transactional(readOnly = false)
-    public TransactionTO addTransaction(TransactionTO transaction) {
+    public TransactionTO addTransaction(TransactionTO transaction) throws TransactionDeniedException {
         TransactionEntity transactionEntity = TransactionMapper.toTransactionEntity(transaction);
         ClientEntity clientEntity = clientRepository.findClientEntityById(transaction.getClient());
         transactionEntity.setClient(clientEntity);
@@ -53,11 +54,27 @@ public class TransactionServiceImpl implements TransactionService {
         }
 
         transactionEntity.setProducts(products);
+
+        checkIfTransactionPossible(clientEntity, products);
+
         transactionRepository.save(transactionEntity);
 
         addTransactionToClient(clientEntity, transactionEntity);
         addTransactionToProducts(products, transactionEntity);
         return TransactionMapper.toTransactionTO(transactionEntity);
+    }
+
+
+    private void checkIfTransactionPossible(ClientEntity clientEntity, List<ProductEntity> products) throws TransactionDeniedException {
+        if (clientEntity.getTransactions() == null || clientEntity.getTransactions().size() < 3) {
+            Double costSum = 0D;
+            for (ProductEntity product : products) {
+                costSum = product.getCost();
+            }
+            if (costSum > 5000) {
+                throw new TransactionDeniedException();
+            }
+        }
     }
 
     private void addTransactionToClient(ClientEntity clientEntity, TransactionEntity transactionEntity) {
@@ -114,7 +131,7 @@ public class TransactionServiceImpl implements TransactionService {
         productRepository.saveAll(productEntities);
     }
 
-    private void removeTransactionFromClient(TransactionEntity transactionEntity, ClientEntity clientEntity){
+    private void removeTransactionFromClient(TransactionEntity transactionEntity, ClientEntity clientEntity) {
         List<TransactionEntity> clientTransactions = clientEntity.getTransactions();
         clientTransactions.remove(transactionEntity);
         clientEntity.setTransactions(clientTransactions);

@@ -2,6 +2,7 @@ package com.capgemini.service;
 
 
 import com.capgemini.Status;
+import com.capgemini.exception.TransactionDeniedException;
 import com.capgemini.type.ClientTO;
 import com.capgemini.type.ProductTO;
 import com.capgemini.type.TransactionTO;
@@ -17,6 +18,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(properties = "spring.profiles.active=hsql")
@@ -33,7 +35,7 @@ public class TransactionTest {
 
     @Test
     @Transactional
-    public void shouldAddTransaction(){
+    public void shouldAddTransaction() throws TransactionDeniedException {
         //given
         ClientTO client = new ClientTO();
         client.setFirstName("Adam");
@@ -81,7 +83,7 @@ public class TransactionTest {
 
     @Test
     @Transactional
-    public void shouldRemoveTransaction(){
+    public void shouldRemoveTransaction() throws TransactionDeniedException {
         //given
         ClientTO client = new ClientTO();
         client.setFirstName("Adam");
@@ -111,7 +113,7 @@ public class TransactionTest {
 
         TransactionTO addedTransaction = transactionService.addTransaction(transaction);
         TransactionTO addedTransaction2 = transactionService.addTransaction(transaction);
-        
+
         //when
         transactionService.removeTransaction(addedTransaction.getId());
         List<TransactionTO> transactions = transactionService.findAllTransactions();
@@ -126,7 +128,7 @@ public class TransactionTest {
 
     @Test
     @Transactional
-    public void shouldFindThreeTransactions() {
+    public void shouldFindThreeTransactions() throws TransactionDeniedException {
         //given
         ClientTO client = new ClientTO();
         client.setFirstName("Adam");
@@ -167,7 +169,7 @@ public class TransactionTest {
 
     @Test
     @Transactional
-    public void shouldUpdateTransaction(){
+    public void shouldUpdateTransaction() throws TransactionDeniedException {
         //given
         ClientTO client = new ClientTO();
         client.setFirstName("Adam");
@@ -205,5 +207,92 @@ public class TransactionTest {
         //then
         assertThat(updatedTransaction.getId()).isEqualTo(addedTransaction.getId());
         assertThat(transactionService.findTransactionById(updatedTransaction.getId()).getStatus()).isEqualTo(status);
+    }
+
+    @Test
+    @Transactional
+    public void shouldThrowExceptionBecauseToBigCost() throws TransactionDeniedException {
+        //given
+        ClientTO client = new ClientTO();
+        client.setFirstName("Adam");
+        client.setLastName("Malysz");
+        client.setAddress("asdsadsa 123sa qwe");
+        client.setDateOfBirth(new Date());
+        client.setEmail("adam.malysz@gmail.com");
+        client.setTelephone(2312312321L);
+        ClientTO addedClient = clientService.addClient(client);
+
+        ProductTO product = new ProductTO();
+        product.setWeight(2D);
+        product.setMargin(0.2);
+        product.setCost(5001D);
+
+        ProductTO addedProduct = productService.addProduct(product);
+
+        List<Long> products = new LinkedList<>();
+        products.add(addedProduct.getId());
+
+        TransactionTO transaction = new TransactionTO();
+        transaction.setDate(new Date());
+        transaction.setStatus(Status.WAITING_FOR_PAYMENT);
+        transaction.setProducts(products);
+        transaction.setClient(addedClient.getId());
+        transaction.setQuantity(products.size());
+
+        //when
+        boolean exceptionThrown = false;
+        try {
+            transactionService.addTransaction(transaction);
+        } catch (TransactionDeniedException e){
+            exceptionThrown = true;
+        }
+
+        //then
+        assertTrue(exceptionThrown);
+    }
+
+    @Test
+    @Transactional
+    public void shouldAddTransactionBecauseMoreThanTwoTransactions() throws TransactionDeniedException {
+        //given
+        ClientTO client = new ClientTO();
+        client.setFirstName("Adam");
+        client.setLastName("Malysz");
+        client.setAddress("asdsadsa 123sa qwe");
+        client.setDateOfBirth(new Date());
+        client.setEmail("adam.malysz@gmail.com");
+        client.setTelephone(2312312321L);
+        ClientTO addedClient = clientService.addClient(client);
+
+        ProductTO product = new ProductTO();
+        product.setWeight(2D);
+        product.setMargin(0.2);
+        product.setCost(5000D);
+
+        ProductTO addedProduct = productService.addProduct(product);
+
+        product.setCost(5001D);
+        ProductTO addedProduct2 = productService.addProduct(product);
+
+        List<Long> products = new LinkedList<>();
+        products.add(addedProduct.getId());
+
+        TransactionTO transaction = new TransactionTO();
+        transaction.setDate(new Date());
+        transaction.setStatus(Status.WAITING_FOR_PAYMENT);
+        transaction.setProducts(products);
+        transaction.setClient(addedClient.getId());
+        transaction.setQuantity(products.size());
+
+        //when
+        transactionService.addTransaction(transaction);
+        transactionService.addTransaction(transaction);
+        transactionService.addTransaction(transaction);
+        products.add(addedProduct2.getId());
+        transaction.setProducts(products);
+        transactionService.addTransaction(transaction);
+
+        //then
+        assertThat(clientService.findClientById(addedClient.getId()).getTransactions().size()).isEqualTo(4);
     }
 }
