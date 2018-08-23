@@ -295,4 +295,65 @@ public class TransactionTest {
         //then
         assertThat(clientService.findClientById(addedClient.getId()).getTransactions().size()).isEqualTo(4);
     }
+
+
+    @Test
+    @Transactional
+    public void shouldThrowExceptionBecauseTooManyExpensiveProducts() throws TransactionDeniedException {
+        //given
+        ClientTO client = new ClientTO();
+        client.setFirstName("Adam");
+        client.setLastName("Malysz");
+        client.setAddress("asdsadsa 123sa qwe");
+        client.setDateOfBirth(new Date());
+        client.setEmail("adam.malysz@gmail.com");
+        client.setTelephone(2312312321L);
+        ClientTO addedClient = clientService.addClient(client);
+
+        ProductTO product = new ProductTO();
+        product.setWeight(2D);
+        product.setMargin(0.2);
+        product.setCost(3001D);
+
+        ProductTO addedProduct = productService.addProduct(product);
+
+        List<Long> products = new LinkedList<>();
+        products.add(addedProduct.getId());
+
+        TransactionTO transaction = new TransactionTO();
+        transaction.setDate(new Date());
+        transaction.setStatus(Status.WAITING_FOR_PAYMENT);
+        transaction.setProducts(products);
+        transaction.setClient(addedClient.getId());
+        transaction.setQuantity(products.size());
+
+
+        transactionService.addTransaction(transaction);
+        transactionService.addTransaction(transaction);
+        transactionService.addTransaction(transaction);
+        transactionService.addTransaction(transaction);
+
+        product.setCost(7001D);
+        ProductTO addedProduct2 = productService.addProduct(product);
+
+        products.add(addedProduct2.getId());
+        products.add(addedProduct2.getId());
+        products.add(addedProduct2.getId());
+        products.add(addedProduct2.getId());
+        products.add(addedProduct2.getId());
+        products.add(addedProduct2.getId());
+
+        transaction.setProducts(products);
+
+        //when
+        boolean exceptionThrown = false;
+        try {
+            transactionService.addTransaction(transaction);
+        } catch (TransactionDeniedException e){
+            exceptionThrown = true;
+        }
+
+        //then
+        assertTrue(exceptionThrown);
+    }
 }

@@ -66,6 +66,35 @@ public class TransactionServiceImpl implements TransactionService {
 
 
     private void checkIfTransactionPossible(ClientEntity clientEntity, List<ProductEntity> products) throws TransactionDeniedException {
+        checkIfClientHaveLessThanThreeTransactions(clientEntity, products);
+        checkIfTransactionHasMoreThanFiveSameLuxuryProducts(products);
+        
+    }
+
+    private void checkIfTransactionHasMoreThanFiveSameLuxuryProducts(List<ProductEntity> products) throws TransactionDeniedException {
+        List<ProductEntity> luxuryProducts = new LinkedList<>();
+        for (ProductEntity product : products) {
+
+            if (product.getCost() > 7000D) {
+                luxuryProducts.add(product);
+            }
+
+            for (int i = 0; i < luxuryProducts.size() - 1; i++) {
+                int count = 1;
+                for (int j = 1; j < luxuryProducts.size(); j++) {
+
+                    if (luxuryProducts.get(i).getId() == luxuryProducts.get(j).getId()) {
+                        count++;
+                    }
+                    if (count > 5) {
+                        throw new TransactionDeniedException();
+                    }
+                }
+            }
+        }
+    }
+
+    private void checkIfClientHaveLessThanThreeTransactions(ClientEntity clientEntity, List<ProductEntity> products) throws TransactionDeniedException {
         if (clientEntity.getTransactions() == null || clientEntity.getTransactions().size() < 3) {
             Double costSum = 0D;
             for (ProductEntity product : products) {
