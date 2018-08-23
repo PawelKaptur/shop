@@ -1,10 +1,11 @@
 package com.capgemini.repository;
 
 import com.capgemini.entity.ClientEntity;
-import org.springframework.data.repository.CrudRepository;
+import com.capgemini.repository.custom.ClientRepositoryCustom;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ClientRepository extends CrudRepository<ClientEntity, Long> {
+public interface ClientRepository extends JpaRepository<ClientEntity, Long>, ClientRepositoryCustom {
     ClientEntity findClientEntityById(Long id);
 }

@@ -68,7 +68,7 @@ public class TransactionServiceImpl implements TransactionService {
     private void checkIfTransactionPossible(ClientEntity clientEntity, List<ProductEntity> products) throws TransactionDeniedException {
         checkIfClientHaveLessThanThreeTransactions(clientEntity, products);
         checkIfTransactionHasMoreThanFiveSameLuxuryProducts(products);
-        
+
     }
 
     private void checkIfTransactionHasMoreThanFiveSameLuxuryProducts(List<ProductEntity> products) throws TransactionDeniedException {

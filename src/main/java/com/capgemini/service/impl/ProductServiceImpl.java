@@ -56,4 +56,9 @@ public class ProductServiceImpl implements ProductService {
 
         return ProductMapper.toProductTO(productEntity);
     }
+
+    @Override
+    public List<ProductTO> findTenBestSellers() {
+        return null;
+    }
 }

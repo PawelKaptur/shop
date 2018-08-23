@@ -50,6 +50,7 @@ public class TransactionTest {
         product.setWeight(2D);
         product.setMargin(0.2);
         product.setCost(1000D);
+        product.setName("qwertz");
 
         ProductTO addedProduct = productService.addProduct(product);
         ProductTO addedProduct2 = productService.addProduct(product);
@@ -98,6 +99,7 @@ public class TransactionTest {
         product.setWeight(2D);
         product.setMargin(0.2);
         product.setCost(1000D);
+        product.setName("qwertz");
 
         ProductTO addedProduct = productService.addProduct(product);
 
@@ -143,6 +145,7 @@ public class TransactionTest {
         product.setWeight(2D);
         product.setMargin(0.2);
         product.setCost(1000D);
+        product.setName("qwertz");
 
         ProductTO addedProduct = productService.addProduct(product);
 
@@ -184,6 +187,7 @@ public class TransactionTest {
         product.setWeight(2D);
         product.setMargin(0.2);
         product.setCost(1000D);
+        product.setName("qwertz");
 
         ProductTO addedProduct = productService.addProduct(product);
 
@@ -226,6 +230,7 @@ public class TransactionTest {
         product.setWeight(2D);
         product.setMargin(0.2);
         product.setCost(5001D);
+        product.setName("qwertz");
 
         ProductTO addedProduct = productService.addProduct(product);
 
@@ -268,7 +273,8 @@ public class TransactionTest {
         product.setWeight(2D);
         product.setMargin(0.2);
         product.setCost(5000D);
-
+        product.setName("qwertz");
+        
         ProductTO addedProduct = productService.addProduct(product);
 
         product.setCost(5001D);
@@ -314,6 +320,7 @@ public class TransactionTest {
         product.setWeight(2D);
         product.setMargin(0.2);
         product.setCost(3001D);
+        product.setName("qwertz");
 
         ProductTO addedProduct = productService.addProduct(product);
 

@@ -16,6 +16,7 @@ public class ProductMapper {
 
         ProductTO productTO = new ProductTO();
         productTO.setCost(productEntity.getCost());
+        productTO.setName(productEntity.getName());
         productTO.setId(productEntity.getId());
         productTO.setMargin(productEntity.getMargin());
         productTO.setWeight(productEntity.getWeight());
@@ -35,6 +36,7 @@ public class ProductMapper {
         productEntity.setCost(productTO.getCost());
         productEntity.setMargin(productTO.getMargin());
         productEntity.setWeight(productTO.getWeight());
+        productEntity.setName(productTO.getName());
 
         return productEntity;
     }

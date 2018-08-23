@@ -60,4 +60,9 @@ public class ClientServiceImpl implements ClientService {
         clientRepository.save(clientEntity);
         return ClientMapper.toClientTO(clientEntity);
     }
+
+    @Override
+    public List<ClientTO> findClientsByLastName(String lastName) {
+        return ClientMapper.toClientTOList(clientRepository.findClientsByLastName(lastName));
+    }
 }

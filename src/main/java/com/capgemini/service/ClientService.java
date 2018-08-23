@@ -15,4 +15,6 @@ public interface ClientService {
     List<ClientTO> findAllClients();
 
     ClientTO updateClient(ClientTO client);
+
+    List<ClientTO> findClientsByLastName(String lastName);
 }

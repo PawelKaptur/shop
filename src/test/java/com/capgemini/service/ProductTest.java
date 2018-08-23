@@ -28,6 +28,7 @@ public class ProductTest {
         product.setWeight(2D);
         product.setMargin(0.2);
         product.setCost(1000D);
+        product.setName("qwertz");
 
         ProductTO addedProduct = productService.addProduct(product);
 
@@ -46,6 +47,7 @@ public class ProductTest {
         product.setWeight(2D);
         product.setMargin(0.2);
         product.setCost(1000D);
+        product.setName("qwertz");
 
         ProductTO addedProduct = productService.addProduct(product);
 
@@ -64,6 +66,7 @@ public class ProductTest {
         product.setWeight(2D);
         product.setMargin(0.2);
         product.setCost(1000D);
+        product.setName("qwertz");
 
         productService.addProduct(product);
         productService.addProduct(product);
@@ -84,6 +87,7 @@ public class ProductTest {
         product.setWeight(2D);
         product.setMargin(0.2);
         product.setCost(1000D);
+        product.setName("qwertz");
 
         ProductTO addedProduct = productService.addProduct(product);
 

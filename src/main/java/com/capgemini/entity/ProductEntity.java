@@ -15,6 +15,9 @@ import java.util.List;
 public class ProductEntity extends AbstractEntity {
 
     @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
     private Double cost;
 
     @Column(nullable = false)
