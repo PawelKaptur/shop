@@ -98,7 +98,6 @@ public class TransactionTest {
         product.setCost(1000D);
 
         ProductTO addedProduct = productService.addProduct(product);
-        ProductTO addedProduct2 = productService.addProduct(product);
 
         List<Long> products = new LinkedList<>();
         products.add(addedProduct.getId());
@@ -111,13 +110,18 @@ public class TransactionTest {
         transaction.setQuantity(products.size());
 
         TransactionTO addedTransaction = transactionService.addTransaction(transaction);
-
+        TransactionTO addedTransaction2 = transactionService.addTransaction(transaction);
+        
         //when
         transactionService.removeTransaction(addedTransaction.getId());
         List<TransactionTO> transactions = transactionService.findAllTransactions();
 
         //then
-        assertThat(transactions).isNull();
+        assertThat(transactions.size()).isEqualTo(1);
+        assertThat(productService.findProductById(addedProduct.getId()).getTransactions().contains(addedTransaction.getId())).isFalse();
+        assertThat(productService.findProductById(addedProduct.getId()).getTransactions().contains(addedTransaction2.getId())).isTrue();
+        assertThat(clientService.findClientById(addedClient.getId()).getTransactions().contains(addedTransaction.getId())).isFalse();
+        assertThat(clientService.findClientById(addedClient.getId()).getTransactions().contains(addedTransaction2.getId())).isTrue();
     }
 
     @Test

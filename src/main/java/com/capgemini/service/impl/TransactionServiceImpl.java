@@ -92,8 +92,33 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
+    @Transactional(readOnly = false)
     public void removeTransaction(Long id) {
+        TransactionEntity transactionEntity = transactionRepository.findTransactionEntityById(id);
+
+        ClientEntity clientEntity = transactionEntity.getClient();
+        removeTransactionFromClient(transactionEntity, clientEntity);
+
+        List<ProductEntity> productEntities = transactionEntity.getProducts();
+        removeTransactionFromProducts(transactionEntity, productEntities);
+
         transactionRepository.deleteById(id);
+    }
+
+    private void removeTransactionFromProducts(TransactionEntity transactionEntity, List<ProductEntity> productEntities) {
+        for (ProductEntity product : productEntities) {
+            List<TransactionEntity> transactionEntities = product.getTransactions();
+            transactionEntities.remove(transactionEntity);
+            product.setTransactions(transactionEntities);
+        }
+        productRepository.saveAll(productEntities);
+    }
+
+    private void removeTransactionFromClient(TransactionEntity transactionEntity, ClientEntity clientEntity){
+        List<TransactionEntity> clientTransactions = clientEntity.getTransactions();
+        clientTransactions.remove(transactionEntity);
+        clientEntity.setTransactions(clientTransactions);
+        clientRepository.save(clientEntity);
     }
 
     @Override

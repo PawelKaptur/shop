@@ -18,10 +18,6 @@ import java.util.List;
 @EntityListeners(Listener.class)
 public class TransactionEntity extends AbstractEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
     @Column(nullable = false)
     private Date date;
 
