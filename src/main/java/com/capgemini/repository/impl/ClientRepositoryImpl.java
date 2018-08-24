@@ -15,8 +15,7 @@ public class ClientRepositoryImpl implements ClientRepositoryCustom {
 
     @PersistenceContext
     EntityManager entityManager;
-
-
+    
     @Override
     public List<ClientEntity> findClientsByLastName(String lastName) {
         QClientEntity client = QClientEntity.clientEntity;
@@ -28,7 +27,6 @@ public class ClientRepositoryImpl implements ClientRepositoryCustom {
 
         return clients;
     }
-
 
     @Override
     public Double costOfAllTransactionsForClient(Long id) {

@@ -15,8 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -121,6 +120,17 @@ public class TransactionServiceImpl implements TransactionService {
 
     private void addTransactionToProducts(List<ProductEntity> products, TransactionEntity transactionEntity) {
         List<TransactionEntity> productsTransactions;
+        Set<Long> idSet = new TreeSet<>();
+
+        for (ProductEntity product : products) {
+            idSet.add(product.getId());
+        }
+
+        products = new LinkedList<>();
+
+        for(Long id : idSet){
+            products.add(productRepository.findProductEntityById(id));
+        }
 
         for (ProductEntity product : products) {
             if (product.getTransactions() != null) {
@@ -135,6 +145,8 @@ public class TransactionServiceImpl implements TransactionService {
 
         productRepository.saveAll(products);
     }
+
+
 
     @Override
     @Transactional(readOnly = false)
@@ -158,6 +170,7 @@ public class TransactionServiceImpl implements TransactionService {
         }
         productRepository.saveAll(productEntities);
     }
+
 
     private void removeTransactionFromClient(TransactionEntity transactionEntity, ClientEntity clientEntity) {
         List<TransactionEntity> clientTransactions = clientEntity.getTransactions();

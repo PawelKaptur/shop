@@ -68,7 +68,6 @@ public class QProductTest {
         List<Long> products = new LinkedList<>();
         products.add(addedProduct.getId());
         products.add(addedProduct2.getId());
-        products.add(addedProduct2.getId());
 
         TransactionTO transaction = new TransactionTO();
         transaction.setDate(new Date());
@@ -89,7 +88,6 @@ public class QProductTest {
         List<Tuple> items = productRepository.findItemsInTransactionInRealization();
 
         //then
-        System.out.println(items.get(0).toArray()[0]);
         assertThat(items.size()).isEqualTo(2);
         assertThat(items.get(0).size()).isEqualTo(2);
         assertThat(items.get(0).toArray()[0]).isEqualTo(addedProduct.getName());
@@ -187,6 +185,8 @@ public class QProductTest {
         //when
         List<ProductEntity> items = productRepository.findTenBestSellers();
 
+
+        System.out.println(productRepository.findProductEntityById(addedProduct5.getId()).getTransactions().size());
         //then
         assertThat(items.size()).isEqualTo(10);
         assertThat(items.get(0).getId()).isEqualTo(addedProduct5.getId());

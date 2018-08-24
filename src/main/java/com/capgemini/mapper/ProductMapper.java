@@ -24,6 +24,7 @@ public class ProductMapper {
             productTO.setTransactions(productEntity.getTransactions().stream().map(t -> t.getId()).collect(Collectors.toList()));
         }
 
+
         return productTO;
     }
 
