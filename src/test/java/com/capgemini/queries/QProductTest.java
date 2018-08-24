@@ -42,7 +42,7 @@ public class QProductTest {
 
     @Test
     @Transactional
-    public void shouldFindTwoItemsWithQuantityOfThree() throws TransactionDeniedException {
+    public void shouldFindTwoItemsWithQuantityOfThreeAndSix() throws TransactionDeniedException {
         //given
         ClientTO client = new ClientTO();
         client.setFirstName("Adam");
@@ -67,6 +67,7 @@ public class QProductTest {
 
         List<Long> products = new LinkedList<>();
         products.add(addedProduct.getId());
+        products.add(addedProduct2.getId());
         products.add(addedProduct2.getId());
 
         TransactionTO transaction = new TransactionTO();

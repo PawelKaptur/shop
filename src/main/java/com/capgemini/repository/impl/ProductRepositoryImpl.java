@@ -51,9 +51,9 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     @Override
     public List<Tuple> findItemsInTransactionInRealization() {
         NumberPath<Long> count = Expressions.numberPath(Long.class, "c");
-        return queryFactory.selectFrom(product)
+        return queryFactory.selectFrom(transaction)
                 .select(product.name, product.id.count().as(count))
-                .innerJoin(product.transactions, transaction)
+                .join(transaction.products, product)
                 .where(transaction.status.eq(Status.IN_REALIZATION))
                 .groupBy(product.id)
                 .fetch();

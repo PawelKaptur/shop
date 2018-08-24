@@ -15,7 +15,7 @@ public class ClientRepositoryImpl implements ClientRepositoryCustom {
 
     @PersistenceContext
     EntityManager entityManager;
-    
+
     @Override
     public List<ClientEntity> findClientsByLastName(String lastName) {
         QClientEntity client = QClientEntity.clientEntity;
