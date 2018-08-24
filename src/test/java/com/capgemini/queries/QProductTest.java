@@ -1,6 +1,7 @@
 package com.capgemini.queries;
 
 import com.capgemini.Status;
+import com.capgemini.entity.ProductEntity;
 import com.capgemini.exception.TransactionDeniedException;
 import com.capgemini.repository.ProductRepository;
 import com.capgemini.service.ClientService;
@@ -109,23 +110,60 @@ public class QProductTest {
         client.setEmail("adam.malysz@gmail.com");
         client.setTelephone(2312312321L);
         ClientTO addedClient = clientService.addClient(client);
-        ClientTO addedClient2 = clientService.addClient(client);
 
         ProductTO product = new ProductTO();
         product.setWeight(2D);
         product.setMargin(0.2);
-        product.setCost(1001D);
+        product.setCost(101D);
         product.setName("qwertz");
 
         ProductTO addedProduct = productService.addProduct(product);
-
-        product.setName("asdfgh");
         ProductTO addedProduct2 = productService.addProduct(product);
+        ProductTO addedProduct3 = productService.addProduct(product);
+        ProductTO addedProduct4 = productService.addProduct(product);
+        ProductTO addedProduct5 = productService.addProduct(product);
+        ProductTO addedProduct6 = productService.addProduct(product);
+        ProductTO addedProduct7 = productService.addProduct(product);
+        ProductTO addedProduct8 = productService.addProduct(product);
+        ProductTO addedProduct9 = productService.addProduct(product);
+        ProductTO addedProduct10 = productService.addProduct(product);
+        ProductTO addedProduct11 = productService.addProduct(product);
+        ProductTO addedProduct12 = productService.addProduct(product);
+        ProductTO addedProduct13 = productService.addProduct(product);
+        ProductTO addedProduct14 = productService.addProduct(product);
 
         List<Long> products = new LinkedList<>();
         products.add(addedProduct.getId());
         products.add(addedProduct2.getId());
-        products.add(addedProduct2.getId());
+        products.add(addedProduct14.getId());
+        products.add(addedProduct13.getId());
+        products.add(addedProduct13.getId());
+        products.add(addedProduct12.getId());
+        products.add(addedProduct12.getId());
+
+        List<Long> products2 = new LinkedList<>();
+        products2.add(addedProduct11.getId());
+        products2.add(addedProduct11.getId());
+        products2.add(addedProduct11.getId());
+        products2.add(addedProduct10.getId());
+        products2.add(addedProduct10.getId());
+        products2.add(addedProduct10.getId());
+        products2.add(addedProduct9.getId());
+        products2.add(addedProduct9.getId());
+        products2.add(addedProduct9.getId());
+        products2.add(addedProduct8.getId());
+        products2.add(addedProduct8.getId());
+        products2.add(addedProduct8.getId());
+        products2.add(addedProduct7.getId());
+        products2.add(addedProduct7.getId());
+        products2.add(addedProduct7.getId());
+        products2.add(addedProduct6.getId());
+        products2.add(addedProduct6.getId());
+        products2.add(addedProduct6.getId());
+        products2.add(addedProduct5.getId());
+        products2.add(addedProduct5.getId());
+        products2.add(addedProduct5.getId());
+        products2.add(addedProduct5.getId());
 
         TransactionTO transaction = new TransactionTO();
         transaction.setDate(new Date());
@@ -135,5 +173,19 @@ public class QProductTest {
         transaction.setQuantity(products.size());
 
         transactionService.addTransaction(transaction);
+        transactionService.addTransaction(transaction);
+        transaction.setProducts(products2);
+        transactionService.addTransaction(transaction);
+
+        
+        //when
+        List<Tuple> items = productRepository.findTenBestSellers();
+
+        //then
+        assertThat(items.size()).isEqualTo(10);
+
+        for(Tuple item : items){
+            System.out.println(item.toArray()[1]);
+        }
     }
 }

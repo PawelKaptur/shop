@@ -4,10 +4,10 @@ import com.capgemini.Status;
 import com.capgemini.entity.QProductEntity;
 import com.capgemini.entity.QTransactionEntity;
 import com.capgemini.repository.custom.ProductRepositoryCustom;
-import com.capgemini.type.ProductTO;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberPath;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;
@@ -32,7 +32,25 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
         //List<ProductEntity> products = queryFactory.selectFrom(product).innerJoin(transaction).groupBy(product.id)
 
-        return queryFactory.selectFrom(product).select(product).select(product, product.id.count().as(count)).fetch();
+       /* return queryFactory.selectFrom(product).select(product, product.id.count().as(count))
+                .innerJoin(product.transactions, transaction)
+                .groupBy(product.id)
+                .fetch();*/
+       return  queryFactory.selectFrom(product)
+               .select(product, product.id.count().as(count))
+               .innerJoin(product.transactions, transaction)
+               .groupBy(product.id)
+               .orderBy(count.desc())
+               .limit(10L)
+               .fetch();
+/*        return  queryFactory.selectFrom(product)
+                .where(product.id.in(
+                        JPAExpressions.select(product, product.id.count().as(count))
+                                .innerJoin(product.transactions, transaction)
+                                .groupBy(product.id)
+                                .limit(10L)
+                ))
+                .fetch();*/
     }
 
 
