@@ -6,7 +6,6 @@ import com.querydsl.core.Tuple;
 import java.util.List;
 
 public interface ProductRepositoryCustom {
-    List<ProductTO> findTenBestSellers();
+    List<Tuple> findTenBestSellers();
     List<Tuple> findItemsInTransactionInRealization();
-
 }

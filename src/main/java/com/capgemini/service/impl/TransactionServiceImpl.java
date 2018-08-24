@@ -97,7 +97,7 @@ public class TransactionServiceImpl implements TransactionService {
         if (clientEntity.getTransactions() == null || clientEntity.getTransactions().size() < 3) {
             Double costSum = 0D;
             for (ProductEntity product : products) {
-                costSum = product.getCost();
+                costSum += product.getCost();
             }
             if (costSum > 5000) {
                 throw new TransactionDeniedException();

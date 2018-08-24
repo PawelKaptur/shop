@@ -14,6 +14,4 @@ public interface ProductService {
     List<ProductTO> findAllProducts();
 
     ProductTO updateProduct(ProductTO client);
-
-    List<ProductTO> findTenBestSellers();
 }

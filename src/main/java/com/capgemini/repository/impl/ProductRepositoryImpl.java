@@ -20,18 +20,19 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     EntityManager entityManager;
 
     @Override
-    public List<ProductTO> findTenBestSellers() {
+    public List<Tuple> findTenBestSellers() {
         QTransactionEntity transaction = QTransactionEntity.transactionEntity;
         QProductEntity product = QProductEntity.productEntity;
-
         JPAQueryFactory queryFactory = new JPAQueryFactory(this.entityManager);
 
         //to znajduje liste transakcji po id klienta
         //queryFactory.selectFrom(transaction).where(transaction.client.id.eq(id)).fetch()
 
+        NumberPath<Long> count = Expressions.numberPath(Long.class, "c");
+
         //List<ProductEntity> products = queryFactory.selectFrom(product).innerJoin(transaction).groupBy(product.id)
 
-        return null;
+        return queryFactory.selectFrom(product).select(product).select(product, product.id.count().as(count)).fetch();
     }
 
 
@@ -39,7 +40,6 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     public List<Tuple> findItemsInTransactionInRealization() {
         QTransactionEntity transaction = QTransactionEntity.transactionEntity;
         QProductEntity product = QProductEntity.productEntity;
-
         JPAQueryFactory queryFactory = new JPAQueryFactory(this.entityManager);
 
         NumberPath<Long> count = Expressions.numberPath(Long.class, "c");
