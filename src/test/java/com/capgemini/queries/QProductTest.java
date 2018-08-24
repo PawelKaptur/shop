@@ -136,8 +136,8 @@ public class QProductTest {
         products.add(addedProduct.getId());
         products.add(addedProduct2.getId());
         products.add(addedProduct14.getId());
-        products.add(addedProduct13.getId());
-        products.add(addedProduct13.getId());
+        products.add(addedProduct14.getId());
+        products.add(addedProduct12.getId());
         products.add(addedProduct12.getId());
         products.add(addedProduct12.getId());
 
@@ -164,6 +164,10 @@ public class QProductTest {
         products2.add(addedProduct5.getId());
         products2.add(addedProduct5.getId());
         products2.add(addedProduct5.getId());
+        products2.add(addedProduct5.getId());
+
+        List<Long> products3 = new LinkedList<>();
+        products3.add(addedProduct2.getId());
 
         TransactionTO transaction = new TransactionTO();
         transaction.setDate(new Date());
@@ -173,19 +177,19 @@ public class QProductTest {
         transaction.setQuantity(products.size());
 
         transactionService.addTransaction(transaction);
-        transactionService.addTransaction(transaction);
         transaction.setProducts(products2);
         transactionService.addTransaction(transaction);
+        transaction.setProducts(products3);
+        transactionService.addTransaction(transaction);
+        transactionService.addTransaction(transaction);
+        transactionService.addTransaction(transaction);
 
-        
         //when
-        List<Tuple> items = productRepository.findTenBestSellers();
+        List<ProductEntity> items = productRepository.findTenBestSellers();
 
         //then
         assertThat(items.size()).isEqualTo(10);
-
-        for(Tuple item : items){
-            System.out.println(item.toArray()[1]);
-        }
+        assertThat(items.get(0).getId()).isEqualTo(addedProduct5.getId());
+        assertThat(items.get(9).getId()).isEqualTo(addedProduct14.getId());
     }
 }
