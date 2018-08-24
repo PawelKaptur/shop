@@ -1,11 +1,10 @@
 package com.capgemini.repository.impl;
 
-import com.capgemini.Status;
-import com.capgemini.entity.*;
+import com.capgemini.entity.ClientEntity;
+import com.capgemini.entity.QClientEntity;
+import com.capgemini.entity.QProductEntity;
+import com.capgemini.entity.QTransactionEntity;
 import com.capgemini.repository.custom.ClientRepositoryCustom;
-import com.querydsl.core.Tuple;
-import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;
@@ -46,24 +45,4 @@ public class ClientRepositoryImpl implements ClientRepositoryCustom {
         return null;
         //return queryFactory.selectFrom(transaction).where(transaction.client.id.eq(id));
     }
-
-
-    @Override
-    public List<Tuple> fffff() {
-        QClientEntity client = QClientEntity.clientEntity;
-        QTransactionEntity transaction = QTransactionEntity.transactionEntity;
-        QProductEntity product = QProductEntity.productEntity;
-
-        JPAQueryFactory queryFactory = new JPAQueryFactory(this.entityManager);
-
-        //to znajduje liste transakcji po id klienta
-        //queryFactory.selectFrom(transaction).where(transaction.client.id.eq(id)).fetch()
-
-        //probuje f to nizej nawet niezle dziala znajduje te itemki ale nie podlicza
-        //return queryFactory.selectFrom(product).innerJoin(product.transactions, transaction).where(transaction.status.eq(Status.IN_REALIZATION)).groupBy(product.id).fetch();
-
-        NumberPath<Long> count = Expressions.numberPath(Long.class, "c");
-        return queryFactory.selectFrom(product).select(product.name, product.id.count().as(count)).innerJoin(product.transactions, transaction).where(transaction.status.eq(Status.IN_REALIZATION)).groupBy(product.id).fetch();
-    }
-
 }

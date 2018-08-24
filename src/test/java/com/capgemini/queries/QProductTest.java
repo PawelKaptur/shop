@@ -2,12 +2,14 @@ package com.capgemini.queries;
 
 import com.capgemini.Status;
 import com.capgemini.exception.TransactionDeniedException;
+import com.capgemini.repository.ProductRepository;
 import com.capgemini.service.ClientService;
 import com.capgemini.service.ProductService;
 import com.capgemini.service.TransactionService;
 import com.capgemini.type.ClientTO;
 import com.capgemini.type.ProductTO;
 import com.capgemini.type.TransactionTO;
+import com.querydsl.core.Tuple;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +36,12 @@ public class QProductTest {
     @Autowired
     private TransactionService transactionService;
 
+    @Autowired
+    private ProductRepository productRepository;
+
     @Test
     @Transactional
-    public void shouldAddTransactionBecauseMoreThanTwoTransactions() throws TransactionDeniedException {
+    public void shouldFindTwoItemsWithQuantityOfThree() throws TransactionDeniedException {
         //given
         ClientTO client = new ClientTO();
         client.setFirstName("Adam");
@@ -51,63 +56,39 @@ public class QProductTest {
         ProductTO product = new ProductTO();
         product.setWeight(2D);
         product.setMargin(0.2);
-        product.setCost(1D);
+        product.setCost(3001D);
+        product.setName("qwertz");
 
         ProductTO addedProduct = productService.addProduct(product);
+
+        product.setName("asdfgh");
         ProductTO addedProduct2 = productService.addProduct(product);
-        ProductTO addedProduct3 = productService.addProduct(product);
-        ProductTO addedProduct4 = productService.addProduct(product);
-        ProductTO addedProduct5 = productService.addProduct(product);
-        ProductTO addedProduct6 = productService.addProduct(product);
-        ProductTO addedProduct7 = productService.addProduct(product);
-        ProductTO addedProduct8 = productService.addProduct(product);
-        ProductTO addedProduct9 = productService.addProduct(product);
-        ProductTO addedProduct10 = productService.addProduct(product);
-        ProductTO addedProduct11 = productService.addProduct(product);
-        ProductTO addedProduct12 = productService.addProduct(product);
-        ProductTO addedProduct13 = productService.addProduct(product);
-        ProductTO addedProduct14 = productService.addProduct(product);
 
         List<Long> products = new LinkedList<>();
         products.add(addedProduct.getId());
         products.add(addedProduct2.getId());
-        products.add(addedProduct3.getId());
-        products.add(addedProduct14.getId());
-        products.add(addedProduct13.getId());
-        products.add(addedProduct12.getId());
-        products.add(addedProduct11.getId());
-        products.add(addedProduct10.getId());
-        products.add(addedProduct9.getId());
-        products.add(addedProduct8.getId());
-
-        List<Long> products2 = new LinkedList<>();
-        products2.add(addedProduct4.getId());
-        products2.add(addedProduct5.getId());
-        products2.add(addedProduct6.getId());
-        products2.add(addedProduct7.getId());
 
         TransactionTO transaction = new TransactionTO();
         transaction.setDate(new Date());
-        transaction.setStatus(Status.WAITING_FOR_PAYMENT);
+        transaction.setStatus(Status.IN_REALIZATION);
         transaction.setProducts(products);
         transaction.setClient(addedClient.getId());
         transaction.setQuantity(products.size());
 
-        //when
-        for(int i = 0; i < 15; i++){
-            transactionService.addTransaction(transaction);
-        }
+        transactionService.addTransaction(transaction);
+        transactionService.addTransaction(transaction);
+        transactionService.addTransaction(transaction);
 
         transaction.setClient(addedClient2.getId());
-        transaction.setProducts(products2);
-        for(int i = 0; i < 5; i++){
-            transactionService.addTransaction(transaction);
-        }
+        transaction.setStatus(Status.CANCELED);
+        transactionService.addTransaction(transaction);
 
-        List<ProductTO> bestProducts = productService.findTenBestSellers();
+        //when
+        List<Tuple> items = productRepository.findItemsInTransactionInRealization();
 
         //then
-        assertThat(bestProducts.size()).isEqualTo(10);
-        assertThat(bestProducts.stream().map(p -> p.getTransactions()).anyMatch(t -> t.contains(addedProduct11.getId()))).isTrue();
+        System.out.println();
+        assertThat(items.size()).isEqualTo(2);
+        assertThat(items.get(0).size()).isEqualTo(2);
     }
 }

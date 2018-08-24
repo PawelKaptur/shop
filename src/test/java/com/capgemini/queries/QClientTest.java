@@ -40,7 +40,7 @@ public class QClientTest {
 
     @Test
     @Transactional
-    public void shouldFindTwoClients(){
+    public void shouldFindTwoClients() {
         //given
         String lastName = "Malysz";
         ClientTO client = new ClientTO();
@@ -60,56 +60,7 @@ public class QClientTest {
 
         //then
         assertThat(clients.size()).isEqualTo(2);
-
     }
 
-    @Test
-    @Transactional
-    public void shouldKek() throws TransactionDeniedException {
-        //given
-        ClientTO client = new ClientTO();
-        client.setFirstName("Adam");
-        client.setLastName("Malysz");
-        client.setAddress("asdsadsa 123sa qwe");
-        client.setDateOfBirth(new Date());
-        client.setEmail("adam.malysz@gmail.com");
-        client.setTelephone(2312312321L);
-        ClientTO addedClient = clientService.addClient(client);
-        ClientTO addedClient2 = clientService.addClient(client);
 
-        ProductTO product = new ProductTO();
-        product.setWeight(2D);
-        product.setMargin(0.2);
-        product.setCost(3001D);
-        product.setName("qwertz");
-
-        ProductTO addedProduct = productService.addProduct(product);
-
-        product.setName("asdfgh");
-        ProductTO addedProduct2 = productService.addProduct(product);
-
-        List<Long> products = new LinkedList<>();
-        products.add(addedProduct.getId());
-        products.add(addedProduct2.getId());
-
-        TransactionTO transaction = new TransactionTO();
-        transaction.setDate(new Date());
-        transaction.setStatus(Status.IN_REALIZATION);
-        transaction.setProducts(products);
-        transaction.setClient(addedClient.getId());
-        transaction.setQuantity(products.size());
-
-        transactionService.addTransaction(transaction);
-        transactionService.addTransaction(transaction);
-        transactionService.addTransaction(transaction);
-
-        transaction.setClient(addedClient2.getId());
-        transaction.setStatus(Status.CANCELED);
-        transactionService.addTransaction(transaction);
-
-        //when
-        System.out.println(clientRepository.fffff());
-
-        //then
-    }
 }

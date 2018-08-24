@@ -274,7 +274,7 @@ public class TransactionTest {
         product.setMargin(0.2);
         product.setCost(5000D);
         product.setName("qwertz");
-        
+
         ProductTO addedProduct = productService.addProduct(product);
 
         product.setCost(5001D);

@@ -38,7 +38,6 @@ public class TransactionServiceImpl implements TransactionService {
         return TransactionMapper.toTransactionTO(transactionRepository.findTransactionEntityById(id));
     }
 
-    //jeszcze validator
     @Override
     @Transactional(readOnly = false)
     public TransactionTO addTransaction(TransactionTO transaction) throws TransactionDeniedException {

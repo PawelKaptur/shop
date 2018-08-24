@@ -6,7 +6,6 @@ import com.capgemini.listener.Listener;
 import lombok.Data;
 import org.springframework.data.annotation.Version;
 
-
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;

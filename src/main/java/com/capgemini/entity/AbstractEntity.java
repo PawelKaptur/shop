@@ -19,6 +19,4 @@ public abstract class AbstractEntity {
     private Date dateOfCreation;
 
     private Date dateOfUpdate;
-
-
 }

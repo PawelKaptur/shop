@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class TransactionMapper {
-    public static TransactionTO toTransactionTO(TransactionEntity transactionEntity){
-        if(transactionEntity == null){
+    public static TransactionTO toTransactionTO(TransactionEntity transactionEntity) {
+        if (transactionEntity == null) {
             return null;
         }
 
@@ -25,8 +25,8 @@ public class TransactionMapper {
         return transactionTO;
     }
 
-    public static TransactionEntity toTransactionEntity(TransactionTO transactionTO){
-        if(transactionTO == null){
+    public static TransactionEntity toTransactionEntity(TransactionTO transactionTO) {
+        if (transactionTO == null) {
             return null;
         }
 
@@ -42,7 +42,7 @@ public class TransactionMapper {
         Iterator<TransactionEntity> it = transactions.iterator();
         List<TransactionTO> transactionsTO = new LinkedList<>();
 
-        while (it.hasNext()){
+        while (it.hasNext()) {
             transactionsTO.add(toTransactionTO(it.next()));
         }
 

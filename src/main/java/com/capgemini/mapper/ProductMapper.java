@@ -44,7 +44,7 @@ public class ProductMapper {
     public static List<ProductTO> toProductTOList(Iterable<ProductEntity> products) {
         Iterator<ProductEntity> it = products.iterator();
         List<ProductTO> productsTO = new LinkedList<>();
-        while(it.hasNext()){
+        while (it.hasNext()) {
             productsTO.add(toProductTO(it.next()));
         }
 
