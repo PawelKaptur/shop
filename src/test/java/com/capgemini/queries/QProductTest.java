@@ -186,8 +186,6 @@ public class QProductTest {
         //when
         List<ProductEntity> items = productRepository.findTenBestSellers();
 
-
-        System.out.println(productRepository.findProductEntityById(addedProduct5.getId()).getTransactions().size());
         //then
         assertThat(items.size()).isEqualTo(10);
         assertThat(items.get(0).getId()).isEqualTo(addedProduct5.getId());

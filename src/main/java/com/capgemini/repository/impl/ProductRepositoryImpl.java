@@ -4,6 +4,7 @@ import com.capgemini.Status;
 import com.capgemini.entity.ProductEntity;
 import com.capgemini.entity.QProductEntity;
 import com.capgemini.entity.QTransactionEntity;
+import com.capgemini.entity.TransactionEntity;
 import com.capgemini.repository.custom.ProductRepositoryCustom;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.Expressions;
@@ -32,12 +33,28 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         product = QProductEntity.productEntity;
     }
 
-    @Override
+/*    @Override
     public List<ProductEntity> findTenBestSellers() {
         NumberPath<Long> count = Expressions.numberPath(Long.class, "c");
         List<Tuple> tuples = queryFactory.selectFrom(product)
                 .select(product, product.id.count().as(count))
                 .innerJoin(product.transactions, transaction)
+                .groupBy(product.id)
+                .orderBy(count.desc())
+                .limit(10L)
+                .fetch();
+
+        List<ProductEntity> products = tuples.stream().map(t -> (ProductEntity) t.toArray()[0]).collect(Collectors.toList());
+
+        return products;
+    }*/
+
+    @Override
+    public List<ProductEntity> findTenBestSellers() {
+        NumberPath<Long> count = Expressions.numberPath(Long.class, "c");
+        List<Tuple> tuples = queryFactory.selectFrom(transaction)
+                .select(product, product.id.count().as(count))
+                .innerJoin(transaction.products, product)
                 .groupBy(product.id)
                 .orderBy(count.desc())
                 .limit(10L)
