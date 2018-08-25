@@ -27,20 +27,4 @@ public class ClientRepositoryImpl implements ClientRepositoryCustom {
 
         return clients;
     }
-
-    @Override
-    public Double costOfAllTransactionsForClient(Long id) {
-        QClientEntity client = QClientEntity.clientEntity;
-        QTransactionEntity transaction = QTransactionEntity.transactionEntity;
-        QProductEntity product = QProductEntity.productEntity;
-
-        JPAQueryFactory queryFactory = new JPAQueryFactory(this.entityManager);
-
-        //Double cost = queryFactory.selectFrom(client).innerJoin(client.transactions, transaction).where(client.id.eq(id)).fetchOne();
-        //Double cost = queryFactory.select(product.cost.sum().as("sum")).select()
-
-
-        return null;
-        //return queryFactory.selectFrom(transaction).where(transaction.client.id.eq(id));
-    }
 }
