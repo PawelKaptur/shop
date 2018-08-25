@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -122,9 +123,7 @@ public class TransactionServiceImpl implements TransactionService {
         List<TransactionEntity> productsTransactions;
         Set<Long> idSet = new TreeSet<>();
 
-        for (ProductEntity product : products) {
-            idSet.add(product.getId());
-        }
+        products.stream().filter(c -> idSet.add(c.getId())).collect(Collectors.toSet());
 
         products = new LinkedList<>();
 

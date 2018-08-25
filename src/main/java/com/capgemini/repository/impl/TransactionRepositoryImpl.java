@@ -2,14 +2,12 @@ package com.capgemini.repository.impl;
 
 import com.capgemini.entity.QProductEntity;
 import com.capgemini.entity.QTransactionEntity;
-import com.capgemini.entity.TransactionEntity;
 import com.capgemini.repository.custom.TransactionRepositoryCustom;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.Date;
-import java.util.List;
 
 public class TransactionRepositoryImpl implements TransactionRepositoryCustom {
     @PersistenceContext
@@ -26,11 +24,13 @@ public class TransactionRepositoryImpl implements TransactionRepositoryCustom {
     }
 
     @Override
-    public List<TransactionEntity> profitBetween(Date startDate, Date endDate) {
+    public Double calculateProfitBetween(Date startDate, Date endDate) {
         initialiation();
 
         return queryFactory.selectFrom(transaction)
+                .select(product.cost.multiply(product.margin).sum())
+                .innerJoin(transaction.products, product)
                 .where(transaction.date.between(startDate, endDate))
-                .fetch();
+                .fetchOne();
     }
 }
