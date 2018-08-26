@@ -123,15 +123,13 @@ public class TransactionServiceImpl implements TransactionService {
         List<TransactionEntity> productsTransactions;
         Set<Long> idSet = new TreeSet<>();
 
-        products.stream().filter(c -> idSet.add(c.getId())).collect(Collectors.toSet());
+        products.forEach(c -> idSet.add(c.getId()));
 
-        products = new LinkedList<>();
+        List<ProductEntity> distinctProducts = new LinkedList<>();
 
-        for(Long id : idSet){
-            products.add(productRepository.findProductEntityById(id));
-        }
+        idSet.forEach(i -> distinctProducts.add(productRepository.findProductEntityById(i)));
 
-        for (ProductEntity product : products) {
+        for (ProductEntity product : distinctProducts) {
             if (product.getTransactions() != null) {
                 productsTransactions = product.getTransactions();
             } else {
@@ -142,7 +140,7 @@ public class TransactionServiceImpl implements TransactionService {
             product.setTransactions(productsTransactions);
         }
 
-        productRepository.saveAll(products);
+        productRepository.saveAll(distinctProducts);
     }
 
 

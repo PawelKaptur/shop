@@ -140,7 +140,5 @@ public class QClientTest {
         assertThat(clients3.size()).isEqualTo(3);
         assertThat(clients3.get(0).getId()).isEqualTo(addedClient4.getId());
         assertThat(clients0.size()).isEqualTo(0);
-
     }
-
 }
