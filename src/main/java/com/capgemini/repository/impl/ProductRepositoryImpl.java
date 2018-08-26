@@ -4,7 +4,6 @@ import com.capgemini.Status;
 import com.capgemini.entity.ProductEntity;
 import com.capgemini.entity.QProductEntity;
 import com.capgemini.entity.QTransactionEntity;
-import com.capgemini.entity.TransactionEntity;
 import com.capgemini.repository.custom.ProductRepositoryCustom;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.Expressions;
@@ -20,11 +19,11 @@ import java.util.stream.Collectors;
 public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
     @PersistenceContext
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
-    JPAQueryFactory queryFactory;
-    QTransactionEntity transaction;
-    QProductEntity product;
+    private JPAQueryFactory queryFactory;
+    private QTransactionEntity transaction;
+    private QProductEntity product;
 
     @PostConstruct
     private void initialiation() {
@@ -44,9 +43,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .limit(10L)
                 .fetch();
 
-        List<ProductEntity> products = tuples.stream().map(t -> (ProductEntity) t.toArray()[0]).collect(Collectors.toList());
-
-        return products;
+        return tuples.stream().map(t -> (ProductEntity) t.toArray()[0]).collect(Collectors.toList());
     }
 
     @Override

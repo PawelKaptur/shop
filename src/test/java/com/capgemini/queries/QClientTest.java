@@ -1,6 +1,7 @@
 package com.capgemini.queries;
 
 import com.capgemini.Status;
+import com.capgemini.entity.ClientEntity;
 import com.capgemini.exception.TransactionDeniedException;
 import com.capgemini.repository.ClientRepository;
 import com.capgemini.service.ClientService;
@@ -62,5 +63,84 @@ public class QClientTest {
         assertThat(clients.size()).isEqualTo(2);
     }
 
+    @Test
+    @Transactional
+    public void shouldShowThreeBestClientsBetweenTwoDates() throws TransactionDeniedException {
+        //given
+        ClientTO client = new ClientTO();
+        client.setFirstName("Adam");
+        client.setLastName("Malysz");
+        client.setAddress("asdsadsa 123sa qwe");
+        client.setDateOfBirth(new Date());
+        client.setEmail("adam.malysz@gmail.com");
+        client.setTelephone(2312312321L);
+        ClientTO addedClient = clientService.addClient(client);
+        ClientTO addedClient2 = clientService.addClient(client);
+        ClientTO addedClient3 = clientService.addClient(client);
+        ClientTO addedClient4 = clientService.addClient(client);
+
+        ProductTO product = new ProductTO();
+        product.setWeight(2D);
+        product.setMargin(0.2);
+        product.setCost(1000D);
+        product.setName("qwertz");
+
+        ProductTO addedProduct = productService.addProduct(product);
+
+        product.setCost(500D);
+        product.setMargin(0.1D);
+        ProductTO addedProduct2 = productService.addProduct(product);
+
+        List<Long> products = new LinkedList<>();
+        products.add(addedProduct.getId());
+        products.add(addedProduct2.getId());
+
+        TransactionTO transaction = new TransactionTO();
+        transaction.setDate(new Date(1000L));
+        transaction.setStatus(Status.IN_REALIZATION);
+        transaction.setProducts(products);
+        transaction.setClient(addedClient.getId());
+        transaction.setQuantity(products.size());
+
+        transactionService.addTransaction(transaction);
+        transactionService.addTransaction(transaction);
+        transaction.setDate(new Date(2000L));
+        transaction.setClient(addedClient2.getId());
+        transactionService.addTransaction(transaction);
+
+        transaction.setClient(addedClient4.getId());
+        transaction.setDate(new Date(3000L));
+        transactionService.addTransaction(transaction);
+        transactionService.addTransaction(transaction);
+        transactionService.addTransaction(transaction);
+
+        transaction.setClient(addedClient3.getId());
+        transaction.setDate(new Date(4000L));
+        transactionService.addTransaction(transaction);
+        transactionService.addTransaction(transaction);
+        transactionService.addTransaction(transaction);
+        transactionService.addTransaction(transaction);
+
+        transaction.setDate(new Date(1500L));
+        products.clear();
+        products.add(addedProduct2.getId());
+        transaction.setProducts(products);
+        transactionService.addTransaction(transaction);
+
+        //when
+        List<ClientEntity> clients = clientRepository.findThreeBestClientsBetween(new Date(500L), new Date(5500L));
+        List<ClientEntity> clients2 = clientRepository.findThreeBestClientsBetween(new Date(2500L), new Date(4500L));
+        List<ClientEntity> clients3 = clientRepository.findThreeBestClientsBetween(new Date(500L), new Date(3500L));
+        List<ClientEntity> clients0 = clientRepository.findThreeBestClientsBetween(new Date(500L), new Date(700L));
+
+        assertThat(clients.size()).isEqualTo(3);
+        assertThat(clients.get(0).getId()).isEqualTo(addedClient3.getId());
+        assertThat(clients2.size()).isEqualTo(2);
+        assertThat(clients.get(0).getId()).isEqualTo(addedClient3.getId());
+        assertThat(clients3.size()).isEqualTo(3);
+        assertThat(clients3.get(0).getId()).isEqualTo(addedClient4.getId());
+        assertThat(clients0.size()).isEqualTo(0);
+
+    }
 
 }

@@ -14,11 +14,11 @@ import java.util.Date;
 
 public class TransactionRepositoryImpl implements TransactionRepositoryCustom {
     @PersistenceContext
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
-    JPAQueryFactory queryFactory;
-    QTransactionEntity transaction;
-    QProductEntity product;
+    private JPAQueryFactory queryFactory;
+    private QTransactionEntity transaction;
+    private QProductEntity product;
 
     @PostConstruct
     private void initialiation() {
