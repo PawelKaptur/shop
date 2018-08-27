@@ -39,7 +39,7 @@ public class TransactionRepositoryImpl implements TransactionRepositoryCustom {
     @Override
     public Double calculateAllCostOfTransactionsForClient(Long id) {
         return queryFactory.selectFrom(transaction)
-                .select(product.cost.sum())
+                .select((product.cost).sum())
                 .innerJoin(transaction.products, product)
                 .where(transaction.client.id.eq(id))
                 .fetchOne();
@@ -48,7 +48,7 @@ public class TransactionRepositoryImpl implements TransactionRepositoryCustom {
     @Override
     public Double calculateAllCostOfTransactionsWithStatusForClient(Long id, Status status) {
         return queryFactory.selectFrom(transaction)
-                .select(product.cost.sum())
+                .select((product.cost).sum())
                 .innerJoin(transaction.products, product)
                 .where(transaction.client.id.eq(id).and(transaction.status.eq(status)))
                 .fetchOne();

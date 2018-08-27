@@ -77,9 +77,7 @@ public class TransactionTest {
         assertThat(clientService.findClientById(addedClient.getId()).getTransactions().size()).isEqualTo(1);
         assertThat(clientService.findClientById(addedClient.getId()).getTransactions().get(0)).isEqualTo(addedTransaction.getId());
         assertThat(productService.findProductById(addedProduct.getId()).getTransactions().size()).isEqualTo(1);
-        //assertThat(productService.findProductById(addedProduct.getId()).getTransactions().get(0)).isEqualTo(addedTransaction.getId());
         assertThat(productService.findProductById(addedProduct2.getId()).getTransactions().size()).isEqualTo(1);
-        //assertThat(productService.findProductById(addedProduct2.getId()).getTransactions().get(0)).isEqualTo(addedTransaction.getId());
     }
 
     @Test
@@ -333,7 +331,6 @@ public class TransactionTest {
         transaction.setProducts(products);
         transaction.setClient(addedClient.getId());
         transaction.setQuantity(products.size());
-
 
         transactionService.addTransaction(transaction);
         transactionService.addTransaction(transaction);

@@ -51,6 +51,7 @@ public class ProductServiceImpl implements ProductService {
         productEntity.setWeight(product.getWeight());
         productEntity.setMargin(product.getMargin());
         productEntity.setCost(product.getCost());
+        productEntity.setName(product.getName());
 
         productRepository.save(productEntity);
 

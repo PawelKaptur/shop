@@ -15,8 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 @Service
 @Transactional(readOnly = true)
@@ -48,9 +50,7 @@ public class TransactionServiceImpl implements TransactionService {
         List<Long> productsId = transaction.getProducts();
         List<ProductEntity> products = new LinkedList<>();
 
-        for (Long id : productsId) {
-            products.add(productRepository.findProductEntityById(id));
-        }
+        productsId.forEach(i -> products.add(productRepository.findProductEntityById(i)));
 
         transactionEntity.setProducts(products);
 
@@ -67,7 +67,6 @@ public class TransactionServiceImpl implements TransactionService {
     private void checkIfTransactionPossible(ClientEntity clientEntity, List<ProductEntity> products) throws TransactionDeniedException {
         checkIfClientHaveLessThanThreeTransactions(clientEntity, products);
         checkIfTransactionHasMoreThanFiveSameLuxuryProducts(products);
-
     }
 
     private void checkIfTransactionHasMoreThanFiveSameLuxuryProducts(List<ProductEntity> products) throws TransactionDeniedException {
@@ -81,7 +80,6 @@ public class TransactionServiceImpl implements TransactionService {
             for (int i = 0; i < luxuryProducts.size() - 1; i++) {
                 int count = 1;
                 for (int j = 1; j < luxuryProducts.size(); j++) {
-
                     if (luxuryProducts.get(i).getId() == luxuryProducts.get(j).getId()) {
                         count++;
                     }
@@ -99,6 +97,7 @@ public class TransactionServiceImpl implements TransactionService {
             for (ProductEntity product : products) {
                 costSum += product.getCost();
             }
+
             if (costSum > 5000) {
                 throw new TransactionDeniedException();
             }
