@@ -1,6 +1,8 @@
 package com.capgemini.queries;
 
 import com.capgemini.Status;
+import com.capgemini.TransactionSearchCriteria;
+import com.capgemini.entity.TransactionEntity;
 import com.capgemini.exception.TransactionDeniedException;
 import com.capgemini.repository.TransactionRepository;
 import com.capgemini.service.ClientService;
@@ -14,6 +16,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
@@ -276,5 +279,85 @@ public class QTransactionTest {
         assertThat(cost).isEqualTo(1500D);
         assertThat(cost2).isEqualTo(7000D);
         assertThat(cost3).isEqualTo(6000D);
+    }
+
+    @Test
+    @Transactional
+    public void should() throws TransactionDeniedException {
+        //given
+        String lastName = "Malysz";
+        ClientTO client = new ClientTO();
+        client.setFirstName("Adam");
+        client.setLastName(lastName);
+        client.setAddress("asdsadsa 123sa qwe");
+        client.setDateOfBirth(new Date());
+        client.setEmail("adam.malysz@gmail.com");
+        client.setTelephone(2312312321L);
+        ClientTO addedClient = clientService.addClient(client);
+        client.setLastName("Dluzysz");
+        ClientTO addedClient2 = clientService.addClient(client);
+
+        ProductTO product = new ProductTO();
+        product.setWeight(2D);
+        product.setMargin(0.2);
+        product.setCost(1000D);
+        product.setName("qwertz");
+
+        ProductTO addedProduct = productService.addProduct(product);
+
+        product.setCost(500D);
+        product.setMargin(0.1D);
+        product.setName("asdfg");
+        ProductTO addedProduct2 = productService.addProduct(product);
+
+        List<Long> products = new LinkedList<>();
+        products.add(addedProduct.getId());
+
+        TransactionTO transaction = new TransactionTO();
+        transaction.setDate(new Date(1000L));
+        transaction.setStatus(Status.IN_REALIZATION);
+        transaction.setProducts(products);
+        transaction.setClient(addedClient.getId());
+        transaction.setQuantity(products.size());
+
+        transactionService.addTransaction(transaction);
+        transaction.setDate(new Date(200L));
+        transactionService.addTransaction(transaction);
+        transaction.setDate(new Date(1500L));
+        products.add(addedProduct2.getId());
+        transaction.setProducts(products);
+        transactionService.addTransaction(transaction);
+        transactionService.addTransaction(transaction);
+        transactionService.addTransaction(transaction);
+
+
+        transaction.setDate(new Date(2000L));
+        transaction.setClient(addedClient2.getId());
+        transactionService.addTransaction(transaction);
+        transactionService.addTransaction(transaction);
+        transactionService.addTransaction(transaction);
+
+        //when
+        TransactionSearchCriteria transactionSearchCriteria = new TransactionSearchCriteria();
+        transactionSearchCriteria.setLastName(lastName);
+        List<TransactionEntity> transactions = transactionRepository.searchTransactionByCriteria(transactionSearchCriteria);
+        transactionSearchCriteria.setStartDate(new Date(500L));
+        transactionSearchCriteria.setEndDate(new Date(2000L));
+        List<TransactionEntity> transactions2 = transactionRepository.searchTransactionByCriteria(transactionSearchCriteria);
+        transactionSearchCriteria.setProductId(addedProduct2.getId());
+        List<TransactionEntity> transactions3 = transactionRepository.searchTransactionByCriteria(transactionSearchCriteria);
+        transactionSearchCriteria.setProductId(addedProduct.getId());
+        List<TransactionEntity> transactions4 = transactionRepository.searchTransactionByCriteria(transactionSearchCriteria);
+        transactionSearchCriteria.setCostOfTransaction(1500D);
+        //List<TransactionEntity> transactions5 = transactionRepository.searchTransactionByCriteria(transactionSearchCriteria);
+
+        //then
+        assertThat(transactions.size()).isEqualTo(5);
+        assertThat(transactions.get(0).getClient().getLastName()).isEqualTo(lastName);
+        assertThat(transactions2.size()).isEqualTo(4);
+        assertThat(transactions2.get(0).getClient().getLastName()).isEqualTo(lastName);
+        assertThat(transactions3.size()).isEqualTo(3);
+        assertThat(transactions4.size()).isEqualTo(4);
+        //assertThat(transactions5.size()).isEqualTo(3);
     }
 }
