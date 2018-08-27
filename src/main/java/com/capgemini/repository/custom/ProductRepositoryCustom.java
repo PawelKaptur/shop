@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface ProductRepositoryCustom {
     List<ProductEntity> findTenBestSellers();
+
     List<Tuple> findItemsInTransactionInRealization();
 }

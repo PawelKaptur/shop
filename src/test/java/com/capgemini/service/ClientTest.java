@@ -2,7 +2,6 @@ package com.capgemini.service;
 
 import com.capgemini.Status;
 import com.capgemini.entity.ClientEntity;
-import com.capgemini.entity.TransactionEntity;
 import com.capgemini.exception.TransactionDeniedException;
 import com.capgemini.repository.ClientRepository;
 import com.capgemini.type.ClientTO;
@@ -40,7 +39,7 @@ public class ClientTest {
 
     @Test
     @Transactional
-    public void shouldAddClient(){
+    public void shouldAddClient() {
         //given
         ClientTO client = new ClientTO();
         client.setFirstName("Adam");
@@ -60,7 +59,7 @@ public class ClientTest {
 
     @Test
     @Transactional
-    public void shouldRemoveClient(){
+    public void shouldRemoveClient() {
         //given
         ClientTO client = new ClientTO();
         client.setFirstName("Adam");
@@ -80,7 +79,7 @@ public class ClientTest {
 
     @Test
     @Transactional
-    public void shouldAddThreeClients(){
+    public void shouldAddThreeClients() {
         //given
         ClientTO client = new ClientTO();
         client.setFirstName("Adam");
@@ -102,7 +101,7 @@ public class ClientTest {
 
     @Test
     @Transactional
-    public void shouldHaveCreationDate(){
+    public void shouldHaveCreationDate() {
         //given
         ClientTO client = new ClientTO();
         client.setFirstName("Adam");
@@ -123,7 +122,7 @@ public class ClientTest {
 
     @Test
     @Transactional
-    public void shouldUpdateLastName(){
+    public void shouldUpdateLastName() {
         //given
         ClientTO client = new ClientTO();
         client.setFirstName("Adam");
@@ -178,7 +177,7 @@ public class ClientTest {
 
     @Test
     @Transactional
-    public void versionTest(){
+    public void versionTest() {
         //given
         ClientTO client = new ClientTO();
         client.setFirstName("Adam");

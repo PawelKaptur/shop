@@ -46,12 +46,12 @@ public class ProductServiceImpl implements ProductService {
         productRepository.deleteById(id);
     }
 
-    private void removeProductFromTransactions(ProductEntity product){
+    private void removeProductFromTransactions(ProductEntity product) {
         List<TransactionEntity> transactions = product.getTransactions();
-        for(TransactionEntity transaction : transactions){
+        for (TransactionEntity transaction : transactions) {
             List<ProductEntity> products = transaction.getProducts();
-            for(ProductEntity productEntity : products){
-                if(productEntity.getId() == product.getId()){
+            for (ProductEntity productEntity : products) {
+                if (productEntity.getId() == product.getId()) {
                     products.remove(productEntity);
                 }
             }

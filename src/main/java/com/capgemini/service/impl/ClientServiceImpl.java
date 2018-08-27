@@ -8,7 +8,6 @@ import com.capgemini.mapper.ClientMapper;
 import com.capgemini.repository.ClientRepository;
 import com.capgemini.repository.ProductRepository;
 import com.capgemini.service.ClientService;
-import com.capgemini.service.TransactionService;
 import com.capgemini.type.ClientTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,7 +54,7 @@ public class ClientServiceImpl implements ClientService {
     private void removeTransactionFromProducts(List<TransactionEntity> transactionEntities) {
         for (TransactionEntity transaction : transactionEntities) {
             List<ProductEntity> products = transaction.getProducts();
-            for(ProductEntity product : products){
+            for (ProductEntity product : products) {
                 List<TransactionEntity> transactions = product.getTransactions();
                 transactions.remove(transaction);
                 product.setTransactions(transactions);

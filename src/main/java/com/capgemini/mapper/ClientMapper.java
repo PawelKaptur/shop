@@ -10,8 +10,8 @@ import java.util.stream.Collectors;
 
 public class ClientMapper {
 
-    public static ClientTO toClientTO(ClientEntity clientEntity){
-        if(clientEntity == null){
+    public static ClientTO toClientTO(ClientEntity clientEntity) {
+        if (clientEntity == null) {
             return null;
         }
 
@@ -24,15 +24,15 @@ public class ClientMapper {
         clientTO.setLastName(clientEntity.getLastName());
         clientTO.setTelephone(clientEntity.getTelephone());
 
-        if(clientEntity.getTransactions() != null){
+        if (clientEntity.getTransactions() != null) {
             clientTO.setTransactions(clientEntity.getTransactions().stream().map(t -> t.getId()).collect(Collectors.toList()));
         }
 
         return clientTO;
     }
 
-    public static ClientEntity toClientEntity(ClientTO clientTO){
-        if(clientTO == null){
+    public static ClientEntity toClientEntity(ClientTO clientTO) {
+        if (clientTO == null) {
             return null;
         }
 
@@ -50,7 +50,7 @@ public class ClientMapper {
     public static List<ClientTO> toClientTOList(Iterable<ClientEntity> all) {
         Iterator<ClientEntity> it = all.iterator();
         List<ClientTO> clientsTO = new LinkedList<>();
-        while(it.hasNext()){
+        while (it.hasNext()) {
             clientsTO.add(toClientTO(it.next()));
         }
 

@@ -66,11 +66,11 @@ public class TransactionServiceImpl implements TransactionService {
 
     private void checkIsWeightBiggerThan25(List<ProductEntity> products) throws TransactionDeniedException {
         Double sumOfWeight = 0D;
-        for(ProductEntity product: products){
+        for (ProductEntity product : products) {
             sumOfWeight += product.getWeight();
         }
 
-        if(sumOfWeight > 25){
+        if (sumOfWeight > 25) {
             throw new TransactionDeniedException();
         }
     }

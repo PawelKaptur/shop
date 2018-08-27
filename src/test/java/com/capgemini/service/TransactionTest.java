@@ -2,7 +2,6 @@ package com.capgemini.service;
 
 
 import com.capgemini.Status;
-import com.capgemini.entity.TransactionEntity;
 import com.capgemini.exception.TransactionDeniedException;
 import com.capgemini.type.ClientTO;
 import com.capgemini.type.ProductTO;
@@ -12,7 +11,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
@@ -248,7 +246,7 @@ public class TransactionTest {
         boolean exceptionThrown = false;
         try {
             transactionService.addTransaction(transaction);
-        } catch (TransactionDeniedException e){
+        } catch (TransactionDeniedException e) {
             exceptionThrown = true;
         }
 
@@ -355,7 +353,7 @@ public class TransactionTest {
         boolean exceptionThrown = false;
         try {
             transactionService.addTransaction(transaction);
-        } catch (TransactionDeniedException e){
+        } catch (TransactionDeniedException e) {
             exceptionThrown = true;
         }
 
@@ -404,7 +402,7 @@ public class TransactionTest {
         boolean exceptionThrown = false;
         try {
             transactionService.addTransaction(transaction);
-        } catch (TransactionDeniedException e){
+        } catch (TransactionDeniedException e) {
             exceptionThrown = true;
         }
 

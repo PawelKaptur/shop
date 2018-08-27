@@ -14,7 +14,6 @@ import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
@@ -34,16 +33,13 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
     @Override
     public List<ProductEntity> findTenBestSellers() {
-        NumberPath<Long> count = Expressions.numberPath(Long.class, "c");
-        List<Tuple> tuples = queryFactory.selectFrom(transaction)
-                .select(product, product.id.count().as(count))
+        return queryFactory.selectFrom(transaction)
+                .select(product)
                 .innerJoin(transaction.products, product)
                 .groupBy(product.id)
-                .orderBy(count.desc())
+                .orderBy(product.id.count().desc())
                 .limit(10L)
                 .fetch();
-
-        return tuples.stream().map(t -> (ProductEntity) t.toArray()[0]).collect(Collectors.toList());
     }
 
     @Override

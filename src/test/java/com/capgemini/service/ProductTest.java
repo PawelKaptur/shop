@@ -2,8 +2,6 @@ package com.capgemini.service;
 
 
 import com.capgemini.Status;
-import com.capgemini.entity.ProductEntity;
-import com.capgemini.entity.TransactionEntity;
 import com.capgemini.exception.TransactionDeniedException;
 import com.capgemini.type.ClientTO;
 import com.capgemini.type.ProductTO;
@@ -11,7 +9,6 @@ import com.capgemini.type.TransactionTO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.mongo.MongoClientSettingsBuilderCustomizer;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
