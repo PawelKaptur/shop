@@ -1,6 +1,8 @@
 package com.capgemini.service.impl;
 
 
+import com.capgemini.Status;
+import com.capgemini.TransactionSearchCriteria;
 import com.capgemini.entity.ClientEntity;
 import com.capgemini.entity.ProductEntity;
 import com.capgemini.entity.TransactionEntity;
@@ -15,10 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -186,5 +185,30 @@ public class TransactionServiceImpl implements TransactionService {
 
         transactionRepository.save(transactionEntity);
         return TransactionMapper.toTransactionTO(transactionEntity);
+    }
+
+    @Override
+    public Double calculateProfitBetween(Date startDate, Date endDate) {
+        return transactionRepository.calculateProfitBetween(startDate, endDate);
+    }
+
+    @Override
+    public Double calculateAllCostOfTransactionsForClient(Long id) {
+        return transactionRepository.calculateAllCostOfTransactionsForClient(id);
+    }
+
+    @Override
+    public Double calculateAllCostOfTransactionsWithStatusForClient(Long id, Status status) {
+        return transactionRepository.calculateAllCostOfTransactionsWithStatusForClient(id, status);
+    }
+
+    @Override
+    public Double calculateAllCostOfTransactionsWithStatusForAllClients(Status status) {
+        return transactionRepository.calculateAllCostOfTransactionsWithStatusForAllClients(status);
+    }
+
+    @Override
+    public List<TransactionTO> searchTransactionByCriteria(TransactionSearchCriteria transactionSearchCriteria) {
+        return TransactionMapper.toTransactionTOList(transactionRepository.searchTransactionByCriteria(transactionSearchCriteria));
     }
 }

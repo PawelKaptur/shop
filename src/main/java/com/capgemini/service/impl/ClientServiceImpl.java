@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -80,6 +81,11 @@ public class ClientServiceImpl implements ClientService {
         clientEntity.setFirstName(clientTO.getFirstName());
         clientRepository.save(clientEntity);
         return ClientMapper.toClientTO(clientEntity);
+    }
+    
+    @Override
+    public List<ClientTO> findThreeBestClientsBetween(Date startDate, Date endDate) {
+        return ClientMapper.toClientTOList(clientRepository.findThreeBestClientsBetween(startDate, endDate));
     }
 
     @Override

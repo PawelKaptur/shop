@@ -4,6 +4,7 @@ import com.capgemini.Status;
 import com.capgemini.TransactionSearchCriteria;
 import com.capgemini.entity.TransactionEntity;
 import com.capgemini.exception.TransactionDeniedException;
+import com.capgemini.repository.ClientRepository;
 import com.capgemini.repository.TransactionRepository;
 import com.capgemini.service.ClientService;
 import com.capgemini.service.ProductService;
@@ -39,6 +40,9 @@ public class QTransactionTest {
 
     @Autowired
     private TransactionRepository transactionRepository;
+
+    @Autowired
+    private ClientRepository clientRepository;
 
     @Test
     @Transactional
@@ -83,10 +87,10 @@ public class QTransactionTest {
         transactionService.addTransaction(transaction);
 
         //when
-        Double profit = transactionRepository.calculateProfitBetween(new Date(500L), new Date(2500L));
-        Double profit2 = transactionRepository.calculateProfitBetween(new Date(500L), new Date(1500L));
-        Double profit3 = transactionRepository.calculateProfitBetween(new Date(1500L), new Date(2500L));
-        Double profit4 = transactionRepository.calculateProfitBetween(new Date(2001L), new Date(2500L));
+        Double profit = transactionService.calculateProfitBetween(new Date(500L), new Date(2500L));
+        Double profit2 = transactionService.calculateProfitBetween(new Date(500L), new Date(1500L));
+        Double profit3 = transactionService.calculateProfitBetween(new Date(1500L), new Date(2500L));
+        Double profit4 = transactionService.calculateProfitBetween(new Date(2001L), new Date(2500L));
 
         //then
         assertThat(profit).isEqualTo(700D);
@@ -142,8 +146,8 @@ public class QTransactionTest {
         transactionService.addTransaction(transaction);
 
         //when
-        Double cost = transactionRepository.calculateAllCostOfTransactionsForClient(addedClient.getId());
-        Double cost2 = transactionRepository.calculateAllCostOfTransactionsForClient(addedClient2.getId());
+        Double cost = transactionService.calculateAllCostOfTransactionsForClient(addedClient.getId());
+        Double cost2 = transactionService.calculateAllCostOfTransactionsForClient(addedClient2.getId());
 
         //then
         assertThat(cost).isEqualTo(1500D);
@@ -204,10 +208,10 @@ public class QTransactionTest {
         transactionService.addTransaction(transaction);
 
         //when
-        Double cost = transactionRepository.calculateAllCostOfTransactionsWithStatusForClient(addedClient.getId(), Status.IN_REALIZATION);
-        Double cost2 = transactionRepository.calculateAllCostOfTransactionsWithStatusForClient(addedClient.getId(), Status.WAITING_FOR_PAYMENT);
-        Double cost3 = transactionRepository.calculateAllCostOfTransactionsWithStatusForClient(addedClient2.getId(), Status.WAITING_FOR_PAYMENT);
-        Double cost4 = transactionRepository.calculateAllCostOfTransactionsWithStatusForClient(addedClient2.getId(), Status.IN_DELIVERY);
+        Double cost = transactionService.calculateAllCostOfTransactionsWithStatusForClient(addedClient.getId(), Status.IN_REALIZATION);
+        Double cost2 = transactionService.calculateAllCostOfTransactionsWithStatusForClient(addedClient.getId(), Status.WAITING_FOR_PAYMENT);
+        Double cost3 = transactionService.calculateAllCostOfTransactionsWithStatusForClient(addedClient2.getId(), Status.WAITING_FOR_PAYMENT);
+        Double cost4 = transactionService.calculateAllCostOfTransactionsWithStatusForClient(addedClient2.getId(), Status.IN_DELIVERY);
 
         //then
         assertThat(cost).isEqualTo(1500D);
@@ -270,9 +274,9 @@ public class QTransactionTest {
         transactionService.addTransaction(transaction);
 
         //when
-        Double cost = transactionRepository.calculateAllCostOfTransactionsWithStatusForAllClients(Status.IN_REALIZATION);
-        Double cost2 = transactionRepository.calculateAllCostOfTransactionsWithStatusForAllClients(Status.WAITING_FOR_PAYMENT);
-        Double cost3 = transactionRepository.calculateAllCostOfTransactionsWithStatusForAllClients(Status.IN_DELIVERY);
+        Double cost = transactionService.calculateAllCostOfTransactionsWithStatusForAllClients(Status.IN_REALIZATION);
+        Double cost2 = transactionService.calculateAllCostOfTransactionsWithStatusForAllClients(Status.WAITING_FOR_PAYMENT);
+        Double cost3 = transactionService.calculateAllCostOfTransactionsWithStatusForAllClients(Status.IN_DELIVERY);
 
         //then
         assertThat(cost).isEqualTo(1500D);
@@ -338,25 +342,25 @@ public class QTransactionTest {
         //when
         TransactionSearchCriteria transactionSearchCriteria = new TransactionSearchCriteria();
         transactionSearchCriteria.setLastName(lastName);
-        List<TransactionEntity> transactions = transactionRepository.searchTransactionByCriteria(transactionSearchCriteria);
+        List<TransactionTO> transactions = transactionService.searchTransactionByCriteria(transactionSearchCriteria);
         transactionSearchCriteria.setStartDate(new Date(500L));
         transactionSearchCriteria.setEndDate(new Date(2000L));
-        List<TransactionEntity> transactions2 = transactionRepository.searchTransactionByCriteria(transactionSearchCriteria);
+        List<TransactionTO> transactions2 = transactionService.searchTransactionByCriteria(transactionSearchCriteria);
         transactionSearchCriteria.setProductId(addedProduct2.getId());
-        List<TransactionEntity> transactions3 = transactionRepository.searchTransactionByCriteria(transactionSearchCriteria);
+        List<TransactionTO> transactions3 = transactionService.searchTransactionByCriteria(transactionSearchCriteria);
         transactionSearchCriteria.setProductId(addedProduct.getId());
-        List<TransactionEntity> transactions4 = transactionRepository.searchTransactionByCriteria(transactionSearchCriteria);
+        List<TransactionTO> transactions4 = transactionService.searchTransactionByCriteria(transactionSearchCriteria);
         transactionSearchCriteria.setCostOfTransaction(1500D);
-        List<TransactionEntity> transactions5 = transactionRepository.searchTransactionByCriteria(transactionSearchCriteria);
+        List<TransactionTO> transactions5 = transactionService.searchTransactionByCriteria(transactionSearchCriteria);
         TransactionSearchCriteria transactionSearchCriteria2 = new TransactionSearchCriteria();
         transactionSearchCriteria2.setCostOfTransaction(1000D);
-        List<TransactionEntity> transactions6 = transactionRepository.searchTransactionByCriteria(transactionSearchCriteria2);
+        List<TransactionTO> transactions6 = transactionService.searchTransactionByCriteria(transactionSearchCriteria2);
 
         //then
         assertThat(transactions.size()).isEqualTo(5);
-        assertThat(transactions.get(0).getClient().getLastName()).isEqualTo(lastName);
+        assertThat(clientRepository.findClientEntityById(transactions.get(0).getClient()).getLastName()).isEqualTo(lastName);
         assertThat(transactions2.size()).isEqualTo(4);
-        assertThat(transactions2.get(0).getClient().getLastName()).isEqualTo(lastName);
+        assertThat(clientRepository.findClientEntityById(transactions2.get(0).getClient()).getLastName()).isEqualTo(lastName);
         assertThat(transactions3.size()).isEqualTo(3);
         assertThat(transactions4.size()).isEqualTo(4);
         assertThat(transactions5.size()).isEqualTo(3);

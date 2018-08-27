@@ -7,10 +7,12 @@ import com.capgemini.repository.ProductRepository;
 import com.capgemini.repository.TransactionRepository;
 import com.capgemini.service.ProductService;
 import com.capgemini.type.ProductTO;
+import com.querydsl.core.Tuple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -76,5 +78,10 @@ public class ProductServiceImpl implements ProductService {
         productRepository.save(productEntity);
 
         return ProductMapper.toProductTO(productEntity);
+    }
+
+    @Override
+    public List<ProductTO> findTenBestSellers() {
+        return ProductMapper.toProductTOList(productRepository.findTenBestSellers());
     }
 }

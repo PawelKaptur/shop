@@ -1,7 +1,6 @@
 package com.capgemini.queries;
 
 import com.capgemini.Status;
-import com.capgemini.entity.ClientEntity;
 import com.capgemini.exception.TransactionDeniedException;
 import com.capgemini.repository.ClientRepository;
 import com.capgemini.service.ClientService;
@@ -128,10 +127,10 @@ public class QClientTest {
         transactionService.addTransaction(transaction);
 
         //when
-        List<ClientEntity> clients = clientRepository.findThreeBestClientsBetween(new Date(500L), new Date(5500L));
-        List<ClientEntity> clients2 = clientRepository.findThreeBestClientsBetween(new Date(2500L), new Date(4500L));
-        List<ClientEntity> clients3 = clientRepository.findThreeBestClientsBetween(new Date(500L), new Date(3500L));
-        List<ClientEntity> clients0 = clientRepository.findThreeBestClientsBetween(new Date(500L), new Date(700L));
+        List<ClientTO> clients = clientService.findThreeBestClientsBetween(new Date(500L), new Date(5500L));
+        List<ClientTO> clients2 = clientService.findThreeBestClientsBetween(new Date(2500L), new Date(4500L));
+        List<ClientTO> clients3 = clientService.findThreeBestClientsBetween(new Date(500L), new Date(3500L));
+        List<ClientTO> clients0 = clientService.findThreeBestClientsBetween(new Date(500L), new Date(700L));
 
         assertThat(clients.size()).isEqualTo(3);
         assertThat(clients.get(0).getId()).isEqualTo(addedClient3.getId());

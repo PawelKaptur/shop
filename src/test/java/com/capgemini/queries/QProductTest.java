@@ -184,7 +184,7 @@ public class QProductTest {
         transactionService.addTransaction(transaction);
 
         //when
-        List<ProductEntity> items = productRepository.findTenBestSellers();
+        List<ProductTO> items = productService.findTenBestSellers();
 
         //then
         assertThat(items.size()).isEqualTo(10);
