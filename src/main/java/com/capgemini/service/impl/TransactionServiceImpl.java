@@ -104,7 +104,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     private void checkIfClientHaveLessThanThreeTransactions(ClientEntity clientEntity, List<ProductEntity> products) throws TransactionDeniedException {
-        if (clientEntity.getTransactions() == null || clientEntity.getTransactions().size() < 3) {
+        if (clientEntity.getTransactions().size() < 3) {
             Double costSum = 0D;
             for (ProductEntity product : products) {
                 costSum += product.getCost();
@@ -117,21 +117,13 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     private void addTransactionToClient(ClientEntity clientEntity, TransactionEntity transactionEntity) {
-        List<TransactionEntity> transactions;
-
-        if (clientEntity.getTransactions() != null) {
-            transactions = clientEntity.getTransactions();
-        } else {
-            transactions = new LinkedList<>();
-        }
-
+        List<TransactionEntity> transactions = clientEntity.getTransactions();
         transactions.add(transactionEntity);
         clientEntity.setTransactions(transactions);
         clientRepository.save(clientEntity);
     }
 
     private void addTransactionToProducts(List<ProductEntity> products, TransactionEntity transactionEntity) {
-        List<TransactionEntity> productsTransactions;
         Set<Long> idSet = new TreeSet<>();
 
         products.forEach(c -> idSet.add(c.getId()));
@@ -141,12 +133,7 @@ public class TransactionServiceImpl implements TransactionService {
         idSet.forEach(i -> distinctProducts.add(productRepository.findProductEntityById(i)));
 
         for (ProductEntity product : distinctProducts) {
-            if (product.getTransactions() != null) {
-                productsTransactions = product.getTransactions();
-            } else {
-                productsTransactions = new LinkedList<>();
-            }
-
+            List<TransactionEntity> productsTransactions = product.getTransactions();
             productsTransactions.add(transactionEntity);
             product.setTransactions(productsTransactions);
         }
