@@ -283,7 +283,7 @@ public class QTransactionTest {
 
     @Test
     @Transactional
-    public void should() throws TransactionDeniedException {
+    public void shouldFindTransactionbyCriteria() throws TransactionDeniedException {
         //given
         String lastName = "Malysz";
         ClientTO client = new ClientTO();
@@ -330,7 +330,6 @@ public class QTransactionTest {
         transactionService.addTransaction(transaction);
         transactionService.addTransaction(transaction);
 
-
         transaction.setDate(new Date(2000L));
         transaction.setClient(addedClient2.getId());
         transactionService.addTransaction(transaction);
@@ -349,7 +348,7 @@ public class QTransactionTest {
         transactionSearchCriteria.setProductId(addedProduct.getId());
         List<TransactionEntity> transactions4 = transactionRepository.searchTransactionByCriteria(transactionSearchCriteria);
         transactionSearchCriteria.setCostOfTransaction(1500D);
-        //List<TransactionEntity> transactions5 = transactionRepository.searchTransactionByCriteria(transactionSearchCriteria);
+        List<TransactionEntity> transactions5 = transactionRepository.searchTransactionByCriteria(transactionSearchCriteria);
 
         //then
         assertThat(transactions.size()).isEqualTo(5);
@@ -358,6 +357,6 @@ public class QTransactionTest {
         assertThat(transactions2.get(0).getClient().getLastName()).isEqualTo(lastName);
         assertThat(transactions3.size()).isEqualTo(3);
         assertThat(transactions4.size()).isEqualTo(4);
-        //assertThat(transactions5.size()).isEqualTo(3);
+        assertThat(transactions5.size()).isEqualTo(3);
     }
 }
