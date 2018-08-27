@@ -60,13 +60,25 @@ public class TransactionServiceImpl implements TransactionService {
 
         addTransactionToClient(clientEntity, transactionEntity);
         addTransactionToProducts(products, transactionEntity);
+
         return TransactionMapper.toTransactionTO(transactionEntity);
     }
 
+    private void checkIsWeightBiggerThan25(List<ProductEntity> products) throws TransactionDeniedException {
+        Double sumOfWeight = 0D;
+        for(ProductEntity product: products){
+            sumOfWeight += product.getWeight();
+        }
+
+        if(sumOfWeight > 25){
+            throw new TransactionDeniedException();
+        }
+    }
 
     private void checkIfTransactionPossible(ClientEntity clientEntity, List<ProductEntity> products) throws TransactionDeniedException {
         checkIfClientHaveLessThanThreeTransactions(clientEntity, products);
         checkIfTransactionHasMoreThanFiveSameLuxuryProducts(products);
+        checkIsWeightBiggerThan25(products);
     }
 
     private void checkIfTransactionHasMoreThanFiveSameLuxuryProducts(List<ProductEntity> products) throws TransactionDeniedException {
@@ -141,8 +153,6 @@ public class TransactionServiceImpl implements TransactionService {
 
         productRepository.saveAll(distinctProducts);
     }
-
-
 
     @Override
     @Transactional(readOnly = false)

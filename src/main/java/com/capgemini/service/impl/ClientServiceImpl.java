@@ -2,9 +2,13 @@ package com.capgemini.service.impl;
 
 
 import com.capgemini.entity.ClientEntity;
+import com.capgemini.entity.ProductEntity;
+import com.capgemini.entity.TransactionEntity;
 import com.capgemini.mapper.ClientMapper;
 import com.capgemini.repository.ClientRepository;
+import com.capgemini.repository.ProductRepository;
 import com.capgemini.service.ClientService;
+import com.capgemini.service.TransactionService;
 import com.capgemini.type.ClientTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,10 +22,12 @@ import java.util.List;
 public class ClientServiceImpl implements ClientService {
 
     private ClientRepository clientRepository;
+    private ProductRepository productRepository;
 
     @Autowired
-    public ClientServiceImpl(ClientRepository clientRepository) {
+    public ClientServiceImpl(ClientRepository clientRepository, ProductRepository productRepository) {
         this.clientRepository = clientRepository;
+        this.productRepository = productRepository;
     }
 
     @Override
@@ -39,7 +45,23 @@ public class ClientServiceImpl implements ClientService {
     @Override
     @Transactional(readOnly = false)
     public void removeClient(Long id) {
+        ClientEntity clientEntity = clientRepository.findClientEntityById(id);
+        List<TransactionEntity> transactionEntities = clientEntity.getTransactions();
+        removeTransactionFromProducts(transactionEntities);
+
         clientRepository.deleteById(id);
+    }
+
+    private void removeTransactionFromProducts(List<TransactionEntity> transactionEntities) {
+        for (TransactionEntity transaction : transactionEntities) {
+            List<ProductEntity> products = transaction.getProducts();
+            for(ProductEntity product : products){
+                List<TransactionEntity> transactions = product.getTransactions();
+                transactions.remove(transaction);
+                product.setTransactions(transactions);
+            }
+            productRepository.saveAll(products);
+        }
     }
 
     @Override

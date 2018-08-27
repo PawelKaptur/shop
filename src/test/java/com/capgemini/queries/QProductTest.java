@@ -111,7 +111,7 @@ public class QProductTest {
         ClientTO addedClient = clientService.addClient(client);
 
         ProductTO product = new ProductTO();
-        product.setWeight(2D);
+        product.setWeight(1D);
         product.setMargin(0.2);
         product.setCost(101D);
         product.setName("qwertz");

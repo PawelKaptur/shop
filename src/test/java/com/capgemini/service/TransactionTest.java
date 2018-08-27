@@ -2,6 +2,7 @@ package com.capgemini.service;
 
 
 import com.capgemini.Status;
+import com.capgemini.entity.TransactionEntity;
 import com.capgemini.exception.TransactionDeniedException;
 import com.capgemini.type.ClientTO;
 import com.capgemini.type.ProductTO;
@@ -11,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
@@ -359,5 +361,54 @@ public class TransactionTest {
 
         //then
         assertTrue(exceptionThrown);
+    }
+
+    @Test
+    @Transactional
+    public void shouldThrwoExceptionBecauseTooBigWeight() throws TransactionDeniedException {
+        //given
+        ClientTO client = new ClientTO();
+        client.setFirstName("Adam");
+        client.setLastName("Malysz");
+        client.setAddress("asdsadsa 123sa qwe");
+        client.setDateOfBirth(new Date());
+        client.setEmail("adam.malysz@gmail.com");
+        client.setTelephone(2312312321L);
+        ClientTO addedClient = clientService.addClient(client);
+
+        ProductTO product = new ProductTO();
+        product.setWeight(10D);
+        product.setMargin(0.2);
+        product.setCost(100D);
+        product.setName("qwertz");
+
+        ProductTO addedProduct = productService.addProduct(product);
+
+        List<Long> products = new LinkedList<>();
+        products.add(addedProduct.getId());
+        products.add(addedProduct.getId());
+        products.add(addedProduct.getId());
+        products.add(addedProduct.getId());
+        products.add(addedProduct.getId());
+        products.add(addedProduct.getId());
+
+
+        TransactionTO transaction = new TransactionTO();
+        transaction.setDate(new Date());
+        transaction.setStatus(Status.WAITING_FOR_PAYMENT);
+        transaction.setProducts(products);
+        transaction.setClient(addedClient.getId());
+        transaction.setQuantity(products.size());
+
+        //when
+        boolean exceptionThrown = false;
+        try {
+            transactionService.addTransaction(transaction);
+        } catch (TransactionDeniedException e){
+            exceptionThrown = true;
+        }
+
+        //then
+        assertThat(exceptionThrown).isTrue();
     }
 }
