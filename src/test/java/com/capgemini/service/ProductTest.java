@@ -157,4 +157,46 @@ public class ProductTest {
         assertThat(transactionService.findTransactionById(addedTransaction.getId()).getProducts().contains(addedProduct.getId())).isFalse();
         assertThat(transactionService.findTransactionById(addedTransaction.getId()).getProducts().contains(addedProduct2.getId())).isTrue();
     }
+
+    @Test
+    @Transactional
+    public void shouldUpdateProductWithTransaction() throws TransactionDeniedException {
+        //given
+        ClientTO client = new ClientTO();
+        client.setFirstName("Adam");
+        client.setLastName("Malysz");
+        client.setAddress("asdsadsa 123sa qwe");
+        client.setDateOfBirth(new Date());
+        client.setEmail("adam.malysz@gmail.com");
+        client.setTelephone(2312312321L);
+        ClientTO addedClient = clientService.addClient(client);
+
+        ProductTO product = new ProductTO();
+        product.setWeight(2D);
+        product.setMargin(0.2);
+        product.setCost(1000D);
+        product.setName("qwertz");
+
+        ProductTO addedProduct = productService.addProduct(product);
+
+        List<Long> products = new LinkedList<>();
+        products.add(addedProduct.getId());
+
+        TransactionTO transaction = new TransactionTO();
+        transaction.setDate(new Date());
+        transaction.setStatus(Status.WAITING_FOR_PAYMENT);
+        transaction.setProducts(products);
+        transaction.setClient(addedClient.getId());
+        transaction.setQuantity(products.size());
+
+        TransactionTO addedTransaction = transactionService.addTransaction(transaction);
+
+        //when
+        product.setName("Changed name");
+        ProductTO updatedProduct = productService.updateProduct(addedProduct);
+
+        //then
+        assertThat(updatedProduct.getTransactions()).isNotNull();
+        assertThat(updatedProduct.getTransactions().get(0)).isEqualTo(addedTransaction.getId());
+    }
 }

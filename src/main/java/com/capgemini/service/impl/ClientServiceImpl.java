@@ -82,7 +82,7 @@ public class ClientServiceImpl implements ClientService {
         clientRepository.save(clientEntity);
         return ClientMapper.toClientTO(clientEntity);
     }
-    
+
     @Override
     public List<ClientTO> findThreeBestClientsBetween(Date startDate, Date endDate) {
         return ClientMapper.toClientTOList(clientRepository.findThreeBestClientsBetween(startDate, endDate));

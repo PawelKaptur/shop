@@ -209,6 +209,8 @@ public class TransactionTest {
         //then
         assertThat(updatedTransaction.getId()).isEqualTo(addedTransaction.getId());
         assertThat(transactionService.findTransactionById(updatedTransaction.getId()).getStatus()).isEqualTo(status);
+        assertThat(transactionService.findTransactionById(updatedTransaction.getId()).getProducts().get(0)).isEqualTo(addedProduct.getId());
+        assertThat(transactionService.findTransactionById(updatedTransaction.getId()).getClient()).isEqualTo(addedClient.getId());
     }
 
     @Test
