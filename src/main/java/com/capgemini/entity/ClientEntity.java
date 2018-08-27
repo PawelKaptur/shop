@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 @Entity
@@ -33,7 +34,7 @@ public class ClientEntity extends AbstractEntity {
     private Date dateOfBirth;
 
     @OneToMany(cascade = CascadeType.REMOVE)
-    private List<TransactionEntity> transactions;
+    private List<TransactionEntity> transactions = new LinkedList<>();
 
     @Version
     private int version;

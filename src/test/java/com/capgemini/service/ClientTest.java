@@ -281,7 +281,7 @@ public class ClientTest {
         //when
         TransactionTO addedTransaction = transactionService.addTransaction(transaction);
         clientService.removeClient(addedClient.getId());
-        
+
         //then
         assertThat(clientService.findClientById(addedClient.getId())).isNull();
         assertThat(productService.findProductById(addedProduct.getId())).isNotNull();

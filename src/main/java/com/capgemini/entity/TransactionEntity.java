@@ -8,6 +8,7 @@ import org.springframework.data.annotation.Version;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 @Entity
@@ -32,7 +33,7 @@ public class TransactionEntity extends AbstractEntity {
     private ClientEntity client;
 
     @ManyToMany
-    private List<ProductEntity> products;
+    private List<ProductEntity> products = new LinkedList<>();
 
     @Version
     private int version;

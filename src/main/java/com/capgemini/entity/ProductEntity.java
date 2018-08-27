@@ -5,6 +5,7 @@ import lombok.Data;
 import org.springframework.data.annotation.Version;
 
 import javax.persistence.*;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -28,7 +29,7 @@ public class ProductEntity extends AbstractEntity {
     private Double weight;
 
     @ManyToMany
-    private List<TransactionEntity> transactions;
+    private List<TransactionEntity> transactions = new LinkedList<>();
 
     @Version
     private int version;

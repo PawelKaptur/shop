@@ -1,8 +1,10 @@
 package com.capgemini.service.impl;
 
 import com.capgemini.entity.ProductEntity;
+import com.capgemini.entity.TransactionEntity;
 import com.capgemini.mapper.ProductMapper;
 import com.capgemini.repository.ProductRepository;
+import com.capgemini.repository.TransactionRepository;
 import com.capgemini.service.ProductService;
 import com.capgemini.type.ProductTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +18,12 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
 
     private ProductRepository productRepository;
+    private TransactionRepository transactionRepository;
 
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, TransactionRepository transactionRepository) {
         this.productRepository = productRepository;
+        this.transactionRepository = transactionRepository;
     }
 
     @Override
@@ -37,7 +41,23 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional(readOnly = false)
     public void removeProduct(Long id) {
+        ProductEntity product = productRepository.findProductEntityById(id);
+        removeProductFromTransactions(product);
         productRepository.deleteById(id);
+    }
+
+    private void removeProductFromTransactions(ProductEntity product){
+        List<TransactionEntity> transactions = product.getTransactions();
+        for(TransactionEntity transaction : transactions){
+            List<ProductEntity> products = transaction.getProducts();
+            for(ProductEntity productEntity : products){
+                if(productEntity.getId() == product.getId()){
+                    products.remove(productEntity);
+                }
+            }
+            transaction.setProducts(products);
+        }
+        transactionRepository.saveAll(transactions);
     }
 
     @Override
